@@ -38,16 +38,16 @@ h1:focus {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 80px; /* Adjust the height as needed */
+    height: 80px; /
     color: white;
 }
 
 .navbar-brand {
-    font-size: 1.8em; /* Adjust the font size as needed */
-    font-weight: bold; /* Make the font bold */
+    font-size: 1.8em; 
+    font-weight: bold;
     text-decoration: none;
     color: white;
-    margin-right: 10px; /* Shorten the distance between brand and search bar */
+    margin-right: 10px; 
 }
 
 .nav-items {
@@ -56,17 +56,51 @@ h1:focus {
 }
 
 .search-input {
-    padding: 8px; /* Adjust the padding as needed */
+    padding: 8px;
     border: none;
     border-radius: 5px;
-    margin-right: 10px; /* Shorten the distance between brand and search bar */
+    margin-right: 10px; 
     width:250px;
 }
 
 .search-button {
-    padding: 8px 12px; /* Adjust the padding as needed */
+    padding: 8px 12px; 
     border: none;
     border-radius: 5px;
     background-color: white;
     color: black;
 }
+
+.cities_navbar {
+    background-color: #363535;
+    padding-left: 20%;
+    padding-right: 20%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+    color: white;
+}
+
+.pop_cities {
+    font-size: 1.8em; 
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+    margin-right: 10px;
+}
+.popular_span {
+        margin-right: 20px; 
+        font-size:15px;
+    }
+
+.separator_span {
+    margin-left: 20px;
+    font-size: 20px;
+    margin-right: 20px; 
+}
+.city {
+    display: flex;
+    align-items: center;
+}
+

@@ -4,23 +4,6 @@
     "New York",
     "London",
     "Paris",
-    "Tokyo",
-    "Beijing",
-    "Sydney",
-    "Rio de Janeiro",
-    "Mumbai",
-    "Cairo",
-    "Rome",
-    "Toronto",
-    "Dubai",
-    "Berlin",
-    "Moscow",
-    "Cape Town",
-    "Seoul",
-    "Mexico City",
-    "Buenos Aires",
-    "Istanbul",
-    "Bangkok",
     "Dublin"
 };
 
@@ -33,5 +16,20 @@
     <div class="nav-items">
         <input class="search-input" type="text" placeholder="Search" aria-label="Search">
         <button class="search-button" type="button">Search</button>
+    </div>
+</div>
+
+
+
+<div class="cities_navbar">
+    <div class="nav-items">
+         <span class="popular_span">Popular</span>
+          <span class="seperator_span">|</span>
+        @foreach (var city in popularCities)
+        {
+                    <span class="separator_span">@city</span>
+                                      <span class="separator_span">|</span>
+            //<span>@GetTemperature(city)</span>
+        }
     </div>
 </div>
