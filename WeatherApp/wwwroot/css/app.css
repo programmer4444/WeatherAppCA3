@@ -30,3 +30,43 @@ h1:focus {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+.custom-navbar {
+    background-color: #363535;
+    padding-left: 25%;
+    padding-right: 25%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px; /* Adjust the height as needed */
+    color: white;
+}
+
+.navbar-brand {
+    font-size: 1.8em; /* Adjust the font size as needed */
+    font-weight: bold; /* Make the font bold */
+    text-decoration: none;
+    color: white;
+    margin-right: 10px; /* Shorten the distance between brand and search bar */
+}
+
+.nav-items {
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    padding: 8px; /* Adjust the padding as needed */
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px; /* Shorten the distance between brand and search bar */
+    width:250px;
+}
+
+.search-button {
+    padding: 8px 12px; /* Adjust the padding as needed */
+    border: none;
+    border-radius: 5px;
+    background-color: white;
+    color: black;
+}
