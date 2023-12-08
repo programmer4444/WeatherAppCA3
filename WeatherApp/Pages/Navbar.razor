@@ -10,16 +10,27 @@
 }
 
 
+@code {
+    private bool isSwitchedOn = false;
+
+    private void ToggleSwitch()
+    {
+        isSwitchedOn = !isSwitchedOn;
+    }
+}
 <div class="custom-navbar">
     <a class="navbar-brand" href="#">SkyWeather</a>
 
     <div class="nav-items">
+        <span class="navbar-brand" href="#">SkyWeather</span>
         <input class="search-input" type="text" placeholder="Search" aria-label="Search">
         <button class="search-button" type="button">Search</button>
+        <div class="switch_container" @onclick="ToggleSwitch">
+     <input type="checkbox" id="switch" /><label for="switch">Toggle</label>
+     <a class="navbar-brand">F</a>
+</div>
     </div>
 </div>
-
-
 
 <div class="cities_navbar">
     <div class="nav-items">

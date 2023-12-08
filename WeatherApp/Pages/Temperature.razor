@@ -1,0 +1,58 @@
+﻿@page "/temp"
+
+@code {
+
+}
+
+
+    <!-- Centered Container -->
+    <div class="centered_container">
+        <div class="top_left_text">Top Left Corner Text</div>
+     <div>
+    <h1 class="inlineBlock">Centered Container</h1>
+    <div class="blockContainer">
+        <p>Humidity: </p>
+    </div>
+    <div class="blockContainer">
+        <p>Wind: </p>
+    </div>
+</div>
+
+        <p>This is some text inside the centered container.</p>
+            <div class="below_container_text">Text Below Centered Container</div>
+            <h3>Range Slider Example</h3>
+
+<div>
+   
+    <input class="range" type="range" id="slider" name="slider" min="0" max="100" step="1" @bind="sliderValue" />
+    <p>Selected Value: @sliderValue</p>
+</div>
+
+@code {
+        private int sliderValue = 50;
+}
+
+
+
+
+<div class="temp_cards">
+ <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Card 1</h5>
+            <p class="card-text">7</p>
+            <p class="card-text">11</p>
+        </div>
+    </div>
+
+ <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Card 1</h5>
+            <p class="card-text">7</p>
+            <p class="card-text">11</p>
+        </div>
+    </div>
+    </div>
+    </div>
+
+    <!-- Text Below Centered Container -->
+
