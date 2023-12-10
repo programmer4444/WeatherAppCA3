@@ -1,9 +1,21 @@
 ﻿@page "/graph"
-<h3>Graphs</h3>
+<button @onclick="UpdateParent">Update Parent Value</button>
 
 @code {
+    [Parameter]
+    public string ParentValue { get; set; }
 
+    [Parameter]
+    public EventCallback<string> OnUpdateParentValue { get; set; }
+
+    // Method to update the parent value and trigger the event callback
+    private void UpdateParent()
+    {
+        string newValue = "New Value from Child";
+        OnUpdateParentValue.InvokeAsync(newValue);
+    }
 }
+<h2>here</h2>
    <div class="centered_container">
        <h2>Weekly Forecast</h2>
 <div class="temp_cards">

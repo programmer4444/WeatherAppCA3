@@ -2,18 +2,80 @@
 
 @inject WeatherApiService WeatherService
 
-<Navbar/>
-<Temperature/>
+@code {
+    string[] popularCities = {
+    "New York",
+    "London",
+    "Paris",
+    "Dublin"
+};
+
+}
 
 @code {
-    private string weatherData;
+    private List<double>? myListCelsius;
+    private List<double>? myListFahrenheit;
+    private List<string>? myListIcons;
+
+    private string? weatherData;
+    private bool celsius = true;
+    private dynamic? json_data;
+
+
+
+    private void ToggleTemperatureUnit()
+    {
+        celsius = !celsius;
+    }
+
+    protected override void OnInitialized()
+    {
+        try
+        {
+            if (!string.IsNullOrEmpty(weatherData))
+            {
+                // Parse the JSON string
+                json_data = JsonConvert.DeserializeObject(weatherData);
+
+            }
+            else
+            {
+                Console.WriteLine("Error: weatherData is null or empty");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle exceptions
+            Console.WriteLine("Error: " + ex.Message);
+        }
+    }
 
     private async Task FetchWeatherData()
     {
         try
         {
-            weatherData = await WeatherService.GetWeatherForecastAsync("London", 4, DateTime.Parse("2023-12-12"));
-            Console.WriteLine(weatherData);
+            //DateTime.Parse("2023-12-12")
+            //DateTime.Today
+            weatherData = await WeatherService.GetWeatherForecastAsync("Dublin", 4, DateTime.Today);
+            myListCelsius = new List<double>();
+            myListFahrenheit = new List<double>();
+            myListIcons = new List<string>();
+
+            for (int i = 0; i < popularCities.GetLength(0); i++)
+            {
+
+                var weatherForecast = await WeatherService.GetWeatherForecastAsync(popularCities[i], 4, DateTime.Today);
+                dynamic? jsonData = JsonConvert.DeserializeObject(weatherForecast);
+                myListCelsius.Add(jsonData?.current?.temp_c.ToObject<double>());
+                myListFahrenheit.Add(jsonData?.current?.temp_f.ToObject<double>());
+                myListIcons.Add(jsonData?.current?.condition.icon.ToObject<string>());
+
+
+
+            }
+
+
+
         }
         catch (Exception ex)
         {
@@ -21,6 +83,61 @@
             Console.WriteLine($"Error: {ex.Message}");
         }
     }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await FetchWeatherData();
+        OnInitialized();
+    }
+
+    private async Task updateCity(string cityName)
+    {
+        try
+        {
+
+            weatherData = await WeatherService.GetWeatherForecastAsync(cityName, 4, DateTime.Today);
+            json_data = JsonConvert.DeserializeObject(weatherData);
+
+
+        }
+        catch (Exception ex)
+        {
+            // Handle exceptions
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+
+    }
+    // Event handler to update the parent value
+
+    private async Task UpdateParentData(string cityName)
+    {
+        try
+        {
+            weatherData = await WeatherService.GetWeatherForecastAsync(cityName, 4, DateTime.Today);
+            json_data = JsonConvert.DeserializeObject(weatherData);
+        }
+        catch (Exception ex)
+        {
+            // Handle exceptions
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+
+    }
+}
+@if (json_data != null)
+{
+                     <Navbar myData="@json_data" OnUpdateParentData="@UpdateParentData"
+                 MyListCelsius="@myListCelsius"
+                 MyListFahrenheit="@myListFahrenheit"
+                 MyListIcons="@myListIcons" 
+                 Celsius="@celsius"
+                 ToggleTemp="ToggleTemperatureUnit"
+
+                         />
+                     
+                    
+                                    
 }
 
-<button @onclick="FetchWeatherData">Fetch Weather Data</button>
+
