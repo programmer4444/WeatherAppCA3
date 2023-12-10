@@ -31,78 +31,6 @@ h1:focus {
         content: "An error has occurred."
     }
 
-.custom-navbar {
-    background-color: #363535;
-    padding-left: 25%;
-    padding-right: 25%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 80px; /
-    color: white;
-}
-
-.navbar-brand {
-    font-size: 1.8em; 
-    font-weight: bold;
-    text-decoration: none;
-    color: white;
-    margin-right: 10px; 
-}
-
-.nav-items {
-    display: flex;
-    align-items: center;
-}
-
-.search-input {
-    padding: 8px;
-    border: none;
-    border-radius: 5px;
-    margin-right: 10px; 
-    width:250px;
-}
-
-.search-button {
-    padding: 8px 12px; 
-    border: none;
-    border-radius: 5px;
-    background-color: white;
-    color: black;
-}
-
-.cities_navbar {
-    background-color: #363535;
-    padding-left: 20%;
-    padding-right: 20%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 80px;
-    color: white;
-}
-
-.pop_cities {
-    font-size: 1.8em; 
-    font-weight: bold;
-    text-decoration: none;
-    color: white;
-    margin-right: 10px;
-}
-.popular_span {
-        margin-right: 20px; 
-        font-size:15px;
-    }
-
-.separator_span {
-    margin-left: 20px;
-    font-size: 20px;
-    margin-right: 20px; 
-}
-.city {
-    display: flex;
-    align-items: center;
-}
 
 .switch_container {
     display: inline-block;
@@ -110,48 +38,7 @@ h1:focus {
     cursor: pointer;
 }
 
-input[type=checkbox] {
-    height: 0;
-    width: 0;
-    visibility: hidden;
-}
 
-label {
-    cursor: pointer;
-    text-indent: -9999px;
-    width: 100px;
-    margin-top:5px;
-    height: 40px;
-    background: grey;
-    display: block;
-    border-radius: 100px;
-    position: relative;
-}
-
-    label:after {
-        content: '';
-        position: absolute;
-        top: 5px;
-        left: 5px;
-        width: 40px;
-        height: 30px;
-        background: #fff;
-        border-radius: 90px;
-        transition: 0.3s;
-    }
-
-input:checked + label {
-    background: #bada55;
-}
-
-    input:checked + label:after {
-        left: calc(100% - 5px);
-        transform: translateX(-100%);
-    }
-
-label:active:after {
-    width: 10px;
-}
 
 /* Centered Container */
 .centered_container {

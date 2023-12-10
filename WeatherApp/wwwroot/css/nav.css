@@ -1,0 +1,156 @@
+﻿
+.custom-navbar {
+    background-color: #363535;
+    background-image: linear-gradient(#161c35, #1d274b);
+    padding-left: 20%;
+    padding-right: 20%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+    color: white;
+}
+
+.navbar-brand {
+    font-size: 1.8em;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+    margin-right: 10px;
+}
+.city_text {
+    font-size: 1.8em;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+
+}
+
+.nav-items {
+    display: flex;
+    align-items: center;
+}
+.navbar-brand-location{
+    font-size:15px;
+}
+.search_button {
+    background-color: #c0c0c0; 
+    color: white; 
+    padding: 10px 15px; 
+    border: none; 
+    border-radius: 10px; 
+    cursor: pointer;
+}
+.search-input {
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+    width: 250px;
+}
+
+.search-button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: white;
+    color: black;
+}
+
+
+.cities_navbar {
+    padding-left:20%;
+    background-image: linear-gradient(#232f5b, #2c3b72);
+    display: flex;
+    align-items: center;
+    height: 80px;
+    color: white;
+}
+
+.pop_cities {
+    font-size: 1.8em;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+}
+
+.popular_span {
+    
+    font-size: 15px;
+}
+
+.separator_span {
+    margin-left: 20px;
+    font-size: 20px;
+    margin-right: 20px;
+}
+
+.city {
+    display: flex;
+    align-items: center;
+}
+.celsius_nav {
+    font-size: 30px;
+    color: white;
+}
+.fahrenheit_nav{
+    font-size:30px;
+    color:white;
+}
+
+.switch {
+    margin-top:2%;
+    --button-width: 5em;
+    --button-height: 2.5em;
+    --toggle-diameter: 2em;
+    --button-toggle-offset: calc((var(--button-height) - var(--toggle-diameter)) / 2);
+    --toggle-shadow-offset: 10px;
+    --toggle-wider: 3em;
+    --color-grey: #c0c0c0;
+    --color-green: #ff0000;
+}
+
+.slider {
+    display: inline-block;
+    width: var(--button-width);
+    height: var(--button-height);
+    background-color: var(--color-grey);
+    border-radius: calc(var(--button-height) / 2);
+    position: relative;
+    transition: 0.3s all ease-in-out;
+}
+
+    .slider::after {
+        content: "";
+        display: inline-block;
+        width: var(--toggle-diameter);
+        height: var(--toggle-diameter);
+        background-color: #fff;
+        border-radius: calc(var(--toggle-diameter) / 2);
+        position: absolute;
+        top: var(--button-toggle-offset);
+        transform: translateX(var(--button-toggle-offset));
+        box-shadow: var(--toggle-shadow-offset) 0 calc(var(--toggle-shadow-offset) * 4) rgba(0, 0, 0, 0.1);
+        transition: 0.3s all ease-in-out;
+    }
+
+.switch input[type="checkbox"]:checked + .slider {
+    background-color: lightblue;
+}
+
+    .switch input[type="checkbox"]:checked + .slider::after {
+        transform: translateX(calc(var(--button-width) - var(--toggle-diameter) - var(--button-toggle-offset)));
+        box-shadow: calc(var(--toggle-shadow-offset) * -1) 0 calc(var(--toggle-shadow-offset) * 4) rgba(0, 0, 0, 0.1);
+    }
+
+.switch input[type="checkbox"] {
+    display: none;
+}
+
+    .switch input[type="checkbox"]:active + .slider::after {
+        width: var(--toggle-wider);
+    }
+
+    .switch input[type="checkbox"]:checked:active + .slider::after {
+        transform: translateX(calc(var(--button-width) - var(--toggle-wider) - var(--button-toggle-offset)));
+    }

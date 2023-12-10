@@ -1,4 +1,5 @@
 ﻿@page "/nav"
+@inject WeatherApiService WeatherService
 @code {
     string[] popularCities = {
     "New York",
@@ -10,37 +11,209 @@
 }
 
 
+
 @code {
-    private bool isSwitchedOn = false;
+    private string searchBarText;
+    private string locationName;
+    private string locationCountry;
+    private double curr_cel;
+    private double curr_fah;
+    private string weatherIconUrl;
+    private List<double>? myListCelsius;
+    private List<double>? myListFahrenheit;
+    private List<string>? myListIcons;
 
-    private void ToggleSwitch()
+    private string weatherData;
+    private bool celsius = true;
+
+    private string GetCurrentUnit()
     {
-        isSwitchedOn = !isSwitchedOn;
+        return celsius ? "Celsius" : "Fahrenheit";
     }
-}
-<div class="custom-navbar">
-    <a class="navbar-brand" href="#">SkyWeather</a>
 
+    private void ToggleTemperatureUnit()
+    {
+        celsius = !celsius;
+        Console.WriteLine(celsius);
+    }
+
+    protected override void OnInitialized()
+    {
+        try
+        {
+            if (!string.IsNullOrEmpty(weatherData))
+            {
+                // Parse the JSON string
+                dynamic jsonData = JsonConvert.DeserializeObject(weatherData);
+
+                // Extract the name field
+                locationName = jsonData.location.name;
+                locationCountry = jsonData.location.country;
+                curr_cel = jsonData.current.temp_c;
+                curr_fah = jsonData.current.temp_f;
+                weatherIconUrl = jsonData.current.condition.icon;
+            }
+            else
+            {
+                Console.WriteLine("Error: weatherData is null or empty");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle exceptions
+            Console.WriteLine("Error: " + ex.Message);
+        }
+    }
+
+    private async Task FetchWeatherData()
+    {
+        try
+        {
+            //DateTime.Parse("2023-12-12")
+            //DateTime.Today
+            weatherData = await WeatherService.GetWeatherForecastAsync("Dublin", 4, DateTime.Today);
+            myListCelsius= new List<double>();
+            myListFahrenheit = new List<double>();
+            myListIcons = new List<string>();
+
+            for (int i = 0; i < popularCities.GetLength(0); i++)
+            {
+
+                var weatherForecast = await WeatherService.GetWeatherForecastAsync(popularCities[i], 4, DateTime.Today);
+                dynamic? jsonData = JsonConvert.DeserializeObject(weatherForecast);
+                myListCelsius.Add(jsonData?.current?.temp_c.ToObject<double>());
+                myListFahrenheit.Add(jsonData?.current?.temp_f.ToObject<double>());
+                myListIcons.Add(jsonData?.current?.condition.icon.ToObject<string>());
+       
+
+
+            }
+
+      
+
+        }
+        catch (Exception ex)
+        {
+            // Handle exceptions
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+   
+    protected override async Task OnInitializedAsync()
+    {
+        await FetchWeatherData();
+        OnInitialized();
+    }
+    private async Task Search()
+    {
+        try
+        {
+           
+            weatherData = await WeatherService.GetWeatherForecastAsync(searchBarText, 4, DateTime.Today);
+            dynamic jsonData = JsonConvert.DeserializeObject(weatherData);
+
+            // Extract the name field
+            locationName = jsonData.location.name;
+            locationCountry = jsonData.location.country;
+            curr_cel = jsonData.current.temp_c;
+            curr_fah = jsonData.current.temp_f;
+            weatherIconUrl = jsonData.current.condition.icon;
+            Console.WriteLine(weatherData);
+        }
+        catch (Exception ex)
+        {
+            // Handle exceptions
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+    private async Task updateCity(string cityName)
+    {
+        try
+        {
+           
+            weatherData = await WeatherService.GetWeatherForecastAsync(cityName, 4, DateTime.Today);
+            dynamic jsonData = JsonConvert.DeserializeObject(weatherData);
+
+            // Extract the name field
+            locationName = jsonData.location.name;
+            locationCountry = jsonData.location.country;
+            curr_cel = jsonData.current.temp_c;
+            curr_fah = jsonData.current.temp_f;
+            weatherIconUrl = jsonData.current.condition.icon;
+            Console.WriteLine(weatherData);
+        }
+        catch (Exception ex)
+        {
+            // Handle exceptions
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+       
+    }
+    
+}
+<div class="custom-navbar" >
     <div class="nav-items">
-        <span class="navbar-brand" href="#">SkyWeather</span>
-        <input class="search-input" type="text" placeholder="Search" aria-label="Search">
-        <button class="search-button" type="button">Search</button>
-        <div class="switch_container" @onclick="ToggleSwitch">
-     <input type="checkbox" id="switch" /><label for="switch">Toggle</label>
-     <a class="navbar-brand">F</a>
+
+         <i class="fa fa-sun-o" style="font-size:30px;color:yellow;margin-right:2.5%"></i>
+        <span class="navbar-brand" href="#">WeatherVue</span>
+         @if (celsius)
+        {
+                    <span class="navbar-brand" href="#" style="font-size:15px;">@locationName, @locationCountry @curr_cel°c</span>
+         }
+        else
+        {
+                            <span class="navbar-brand" href="#" style="font-size:15px;">@locationName, @locationCountry @curr_fah°f</span>
+            }
+  
+       <img src="@weatherIconUrl" alt="Weather Icon" width="32" height="32" />
+       <div style="margin-right: 50px;"></div>
+
+
+        <input class="search-input" type="text" placeholder="City e.g. London, Barcelona" aria-label="Search" @bind="searchBarText" >
+        <button class="search_button" type="button"  @onclick="Search">Search</button>
+        <div  style="padding-right: 50px;"></div>
+        <span class="celsius_nav">C</span>
+       <div style="padding-right: 25px;"></div>
+
+        <label class="switch"  data-tg-on="N" data-tg-off="FF" >
+        <input type="checkbox" @onclick="ToggleTemperatureUnit">
+        <span class="slider"></span>
+        </label>
+        <div style="padding-left: 25px;"></div>
+        <span class="fahrenheit_nav">F</span>
+     
+ <span class="glyphicon glyphicon-plus"></span>
+        <div class="switch_container" >
+        
 </div>
     </div>
 </div>
 
 <div class="cities_navbar">
-    <div class="nav-items">
-         <span class="popular_span">Popular</span>
-          <span class="seperator_span">|</span>
-        @foreach (var city in popularCities)
-        {
-                    <span class="separator_span">@city</span>
-                                      <span class="separator_span">|</span>
+    @if (@myListCelsius != null)
+    {
+            @foreach (var city in Enumerable.Range(0, popularCities.GetLength(0)))
+        {       
+        
+       
+                                            <span class="separator_span"  @onclick="() => updateCity(popularCities[city])">@popularCities[city]</span>
+        @if (celsius )
+            {
+                                               <span class="city_text" href="#" style="font-size:15px;">@myListCelsius[city]°c</span>
+
+            }
+            else
+            {
+                                                            <span class="city_text" href="#" style="font-size:15px;">@myListFahrenheit[city]°f</span>
+            }
+                     <div style="padding-right:10px;"></div>
+           <img src="@myListIcons[city]" alt="Weather Icon" width="32" height="32" />
+          
+        
+                                              <span class="separator_span">|</span>
             //<span>@GetTemperature(city)</span>
         }
-    </div>
+        }
 </div>
+
