@@ -79,11 +79,16 @@
     font-size: 15px;
 }
 
+
+
 .separator_span {
     margin-left: 20px;
     font-size: 20px;
     margin-right: 20px;
+    cursor:pointer;
 }
+
+
 
 .city {
     display: flex;

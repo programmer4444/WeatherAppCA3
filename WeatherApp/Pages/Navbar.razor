@@ -197,7 +197,8 @@
         {       
         
        
-                                            <span class="separator_span"  @onclick="() => updateCity(popularCities[city])">@popularCities[city]</span>
+                                                                    <span class="separator_span" style="transition: color 0.3s; cursor: pointer;" onmouseover="this.style.color='#66c2ff'" onmouseout="this.style.color='white'"
+                                                        @onclick="() => updateCity(popularCities[city])">@popularCities[city]</span>
         @if (celsius )
             {
                                                <span class="city_text" href="#" style="font-size:15px;">@myListCelsius[city]°c</span>
@@ -217,3 +218,5 @@
         }
 </div>
 
+
+               
