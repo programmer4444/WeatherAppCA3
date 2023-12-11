@@ -1,2 +1,31 @@
-﻿body {
+﻿
+.container1 {
+    margin-left: 20%;
+    margin-right: 20%;
+    border: 2px solid red;
+    border-radius: 1em;
+    max-width: 40%;
+    overflow: hidden;
+}
+.container1_margin {
+    margin-left: 2.5%;
+    margin-top:1%;
+    margin-bottom:5%;
+}
+
+
+.range {
+    width: 100%;
+}
+
+.card_temp {
+    margin-right: 5%;
+}
+
+.container {
+    width: 10;
+}
+
+.temp_cards {
+    display: flex;
 }

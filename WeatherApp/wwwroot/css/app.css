@@ -2,6 +2,7 @@ h1:focus {
     outline: none;
 }
 
+
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;
@@ -32,49 +33,6 @@ h1:focus {
     }
 
 
-.switch_container {
-    display: inline-block;
-    position: relative;
-    cursor: pointer;
-}
 
 
-
-/* Centered Container */
-.centered_container {
-    margin-left:20%;
-    margin-right:20%;
-    border: 2px solid #ccc;
-}
-
-/* Text in Top-Left Corner */
-.top_left_text {
-    color: #333;
-    font-size: 16px;
-}
-
-.below_container_text {
-    margin-top: 20px;
-    text-align: center;
-    font-size: 18px;
-    color: #555;
-}
-.inlineBlock {
-    display: inline-block; 
-}
-
-.range{
-    width:80%;
-}
-
-.card_temp{
-    margin-right:5%;
- 
-}
-.container{
-    width:10;
-}
-.temp_cards {
-    display: flex;
-}
 

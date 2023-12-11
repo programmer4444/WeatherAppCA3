@@ -20,6 +20,7 @@
     private string? weatherData;
     private bool celsius = true;
     private dynamic? json_data;
+    List<dynamic>? dynamicData =new List<dynamic>();
 
 
 
@@ -57,6 +58,23 @@
             //DateTime.Parse("2023-12-12")
             //DateTime.Today
             weatherData = await WeatherService.GetWeatherForecastAsync("Dublin", 4, DateTime.Today);
+            for (int i = 0; i < 7; i++)
+            {
+                DateTime currentDate = DateTime.Today.AddDays(i);
+                var data = await WeatherService.GetWeatherForecastAsync("Dublin", 4, currentDate);
+
+                //dynamic? d = JsonConvert.DeserializeObject(data);
+                //Console.WriteLine(d);
+                dynamicData?.Add(JsonConvert.DeserializeObject(data));
+            }
+            //Console.WriteLine(dynamicData[0].forecast.forecastday[0].hour[0].time);
+            //Console.WriteLine(dynamicData[0].forecast.forecastday[0].hour[1].time);
+            for (int i = 0; i < 7; i++)
+            {
+               // Console.WriteLine(dynamicData[i].forecast.forecastday[0].hour);
+                //Console.WriteLine(dynamicData[i].forecast.forecastday[0].date);
+            }
+
             myListCelsius = new List<double>();
             myListFahrenheit = new List<double>();
             myListIcons = new List<string>();
@@ -135,9 +153,12 @@
                  ToggleTemp="ToggleTemperatureUnit"
 
                          />
-                     
-                    
-                                    
+                     <Temperature myData="@json_data" OnUpdateParentData="@UpdateParentData"
+                             Celsius="@celsius"
+                             DynamicData="@dynamicData"
+                             />
 }
 
 
+
+ 
