@@ -29,7 +29,7 @@
     {
         await OnUpdateParentData.InvokeAsync(s);
     }
-    
+
 
 
     private int sliderValue = 0;
@@ -53,7 +53,7 @@
                 adjustedTime = adjustedTime.AddMinutes(timeAdjustmentMinutes);
             }
         }
-        
+
     }
     private void ResetSlider(int day)
     {
@@ -84,18 +84,81 @@
         adjustedTime = currentDate;
 
     }
-
-
-    private void print()
-    {
-        Console.WriteLine(DateTime.Today);
-        Console.WriteLine(dynamicData[0].location.name);
-
-    }
+    private bool ShowGraph = false; 
 
 
 
 }
+<div class="container1">
+       <div class="container1_margin">
+    <p>Current Weather</p>
+    @{
+
+         string formattedTime;
+        string format = "yyyy-MM-dd HH:mm";
+
+        // Extract the time component and format it as HH:mm
+        string input = dynamicData[0].location.localtime;
+        DateTime localTime = DateTime.ParseExact(input, "yyyy-MM-dd HH:mm", null);
+        formattedTime = localTime.ToString("HH:mm");
+            
+            double c = Math.Ceiling(double.Parse(dynamicData[0].current.temp_c.ToString()));
+            Console.WriteLine(c+50);
+            <p>@formattedTime</p>
+    }
+               
+
+    <div class="row">
+        <div class="col-md-2"><img src="@dynamicData[0].current.condition.icon"/></div>
+            @{
+                if(Celsius)
+                        {
+                    <div class="col-md-1"><p>@Math.Ceiling(double.Parse(dynamicData[0].current.temp_c.ToString()))°C</p></div>
+                }
+                else
+                {
+                            <div class="col-md-3"><p>@Math.Ceiling(double.Parse(dynamicData[0].current.temp_f.ToString()))°F</p></div>
+                }
+                
+            }
+          <div class="col-md-6">
+                  <p>@dynamicData[0].current.condition.text</p>
+                  @if(Celsius)
+                        {
+                             <p>Feels like @Math.Ceiling(double.Parse(@dynamicData[0].current.feelslike_c.ToString()))°C</p>
+                }
+                else
+                {
+                          <p>Feels like @Math.Ceiling(double.Parse(@dynamicData[0].current.feelslike_f.ToString()))°F</p>
+                }
+              </div>
+           
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            Wind
+        </div>
+         <div class="col-md-4">
+            Humidity
+        </div>
+         <div class="col-md-4">
+            Pressure
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+                <p>@dynamicData[0].current.wind_kph km/h @dynamicData[0].current.wind_dir°</p> 
+        </div>
+         <div class="col-md-4">
+                 <p>@dynamicData[0].current.humidity %</p>
+        </div>
+         <div class="col-md-4">
+               <p>@dynamicData[0].current.pressure_mb MB</p> 
+        </div>
+    </div>
+
+</div>
+</div>
 
 
     <div class="container1">
@@ -177,15 +240,15 @@
                 int currentIndex = i; 
                          <div class="temp_day" @onclick="() => ResetSlider(currentIndex)">
                     <div class="card-body">
-                        <p class="card-title">@formattedResult</p>
+                            <p class="card-title" style="text-align:center;">@formattedResult</p>
                            
-                                    <img src="@dynamicData[i].forecast.forecastday[0].hour[0].condition.icon" style="width: 60px; height: 70px;"/>
+                                        <img src="@dynamicData[i].forecast.forecastday[0].hour[0].condition.icon" style="width: 60px; height: 70px; text-align:center;"/>
                             @if(Celsius){
-                                        <p class="card-text">@tempC°C</p>
+                                        <p class="card-text" style="text-align:center;">@tempC°C</p>
                         }
                         else
                         {
-                                     <p class="card-text">@tempF°F</p>
+                                             <p class="card-text" style="text-align:center;">@tempF°F</p>
                         }
                         
                                
