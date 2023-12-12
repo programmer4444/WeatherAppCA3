@@ -35,3 +35,20 @@
     border: 2px solid red;
     margin-right:1%;
 }
+
+.forecast_item {
+    display: flex;
+    justify-content: space-between;
+}
+.navigation {
+    display: flex;
+    justify-content: space-between;
+}
+
+.left {
+    background: red;
+}
+
+.right {
+    background: blue;
+}

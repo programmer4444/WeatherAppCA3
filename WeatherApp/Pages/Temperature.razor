@@ -23,6 +23,7 @@
     [Parameter]
     public EventCallback<string> OnUpdateParentData { get; set; }
 
+
     // Method to update the parent value and trigger the event callback
     private async Task UpdateParentData(string s)
     {
@@ -184,4 +185,93 @@
             </div>
 </div>
 
+</div>
+
+            
+ <div class="container1">
+        <div class="container1_margin">
+ <div class="centered_container">
+     <h3>Weather Insights</h3>
+     <div class="row">
+         <div class=col-md-2>
+             <img src="@dynamicData[0].forecast.forecastday[0].hour[current.Hour].condition.icon" /> 
+         </div>
+         <div class=col-md-8>
+                    @if (Celsius)
+                    {
+            <h5>Feels like @dynamicData[0].current.feelslike_c°c</h5>
+
+                    }
+                    else
+                    {
+             <h5>Feels like @dynamicData[0].current.feelslike_f°f</h5>
+                    }
+         </div>
+     </div>
+     <h5>@dynamicData[0].current.condition.text</h5>
+           
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="forecast_item">
+                <div><p>Chance of Rain </p></div>
+                <div>@dynamicData[0].forecast.forecastday[0].day.daily_chance_of_rain%</div>
+                </div>
+                <div class="forecast_item">
+                    <div> <p >Low - High</p></div>
+                     @if (Celsius)
+                            {
+                                    <div>@dynamicData[0].forecast.forecastday[0].day.mintemp_c - 
+                                    @dynamicData[0].forecast.forecastday[0].day.maxtemp_c°C</div>
+                            }
+                            else
+                            {
+                                     <div>@dynamicData[0].forecast.forecastday[0].day.mintemp_f - 
+                                    @dynamicData[0].forecast.forecastday[0].day.maxtemp_f°F</div>
+                            }
+
+                </div>
+                <div class="forecast_item">
+                    <div> <p >Humidity</p></div>
+                    <div>@dynamicData[0].forecast.forecastday[0].day.avghumidity%</div>
+                </div>
+
+
+            </div>
+            <div class="col-md-6">
+                 <div class="forecast_item">
+                <div><p>Sunrise</p></div>
+                <div>@dynamicData[0].forecast.forecastday[0].astro.sunrise</div>
+                </div>
+                <div class="forecast_item">
+                <div><p>Sunset</p></div>
+                <div>@dynamicData[0].forecast.forecastday[0].astro.sunset</div>
+                </div>
+                <div class="forecast_item">
+                <div><p>Wind</p></div>
+                <div>@dynamicData[0].current.wind_kph KPH</div>
+                </div>
+ 
+            </div>
+
+        </div>
+          </div>
+    
+
+</div>
+
+
+</div>
+</div>
+
+<div class="navigation">
+  <div>
+    
+    <h1>TWITCHBOOK</h1>
+  </div>
+
+  <div >
+    <h3>Luka Crypto</h3>
+
+  </div>
 </div>
