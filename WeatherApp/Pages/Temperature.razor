@@ -166,14 +166,29 @@
 
 
  <div class="temp_cards">
+       
             @for (int i = 0; i < 7; i++)
             {
+                string inputDate = dynamicData[i].forecast.forecastday[0].hour[0].time;
+                DateTime dateTime = DateTime.ParseExact(inputDate, "yyyy-MM-dd HH:mm", null);
+                double tempC = Math.Ceiling(double.Parse(dynamicData[i].forecast.forecastday[0].hour[0].temp_c.ToString()));
+                double tempF = Math.Ceiling(double.Parse(dynamicData[i].forecast.forecastday[0].hour[0].temp_f.ToString()));
+                string formattedResult = dateTime.ToString("ddd d");
                 int currentIndex = i; 
                          <div class="temp_day" @onclick="() => ResetSlider(currentIndex)">
                     <div class="card-body">
-                        <h5 class="card-title">Card @(i + 1)</h5>
-                        <p class="card-text">7</p>
-                        <p class="card-text">11</p>
+                        <p class="card-title">@formattedResult</p>
+                           
+                                    <img src="@dynamicData[i].forecast.forecastday[0].hour[0].condition.icon" style="width: 60px; height: 70px;"/>
+                            @if(Celsius){
+                                        <p class="card-text">@tempC°C</p>
+                        }
+                        else
+                        {
+                                     <p class="card-text">@tempF°F</p>
+                        }
+                        
+                               
                     </div>
                 </div>
             }
@@ -264,14 +279,3 @@
 </div>
 </div>
 
-<div class="navigation">
-  <div>
-    
-    <h1>TWITCHBOOK</h1>
-  </div>
-
-  <div >
-    <h3>Luka Crypto</h3>
-
-  </div>
-</div>
