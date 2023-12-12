@@ -16,6 +16,18 @@
     public dynamic? myData { get; set; }
     private string? searchBarText;
     private string? popcityText;
+    [Parameter]
+    public List<dynamic>? dynamicData { get; set; }
+
+
+    [Parameter]
+    public EventCallback<string> OnUpdateForecast { get; set; }
+
+    // Method to update the parent value and trigger the event callback
+    private async Task UpdateForecast(string s)
+    {
+        await OnUpdateForecast.InvokeAsync(s);
+    }
 
     [Parameter]
     public EventCallback<string> OnUpdateParentData { get; set; }
@@ -56,19 +68,19 @@
         <span class="navbar-brand" href="#">WeatherVue</span>
          @if (Celsius)
         {
-                               <span class="navbar-brand" href="#" style="font-size:15px;">@myData.location.name, @myData.location.country @myData.current.temp_c°c</span>
+                                   <span class="navbar-brand" href="#" style="font-size:15px;">@dynamicData[0].location.name, @dynamicData[0].location.country @dynamicData[0].current.temp_c°c</span>
         }
         else
         {
-                                                            <span class="navbar-brand" href="#" style="font-size:15px;">@myData.location.name, @myData.location.country @myData.current.temp_f°f</span>
+                                                            <span class="navbar-brand" href="#" style="font-size:15px;">@dynamicData[0].location.name, @dynamicData[0].location.country @dynamicData[0].current.temp_f°f</span>
         }
 
-       <img src="@myData.current.condition.icon" alt="Weather Icon" width="32" height="32" />
+       <img src="@dynamicData[0].current.condition.icon" alt="Weather Icon" width="32" height="32" />
        <div style="margin-right: 50px;"></div>
 
 
         <input class="search-input" type="text" placeholder="City e.g. London, Barcelona" aria-label="Search" @bind="searchBarText" >
-        <button class="search_button" type="button" @onclick="()=>UpdateParentData(searchBarText)">Search</button>
+        <button class="search_button" type="button" @onclick="()=>UpdateForecast(searchBarText)">Search</button>
         <div  style="padding-right: 50px;"></div>
         <span class="celsius_nav">C</span>
        <div style="padding-right: 25px;"></div>
@@ -88,14 +100,14 @@
 </div>
 
 <div class="cities_navbar">
-    @if (MyListCelsius != null && myData != null)
+    @if (MyListCelsius != null && dynamicData[0] != null)
     {
         @foreach (var city in Enumerable.Range(0, popularCities.GetLength(0)))
         {       
 
 
                                                                             <span class="separator_span" style="transition: color 0.3s; cursor: pointer;" onmouseover="this.style.color='#66c2ff'" onmouseout="this.style.color='white'"
-                                                        @onclick="() => UpdateParentData(popularCities[city])">@popularCities[city]</span>
+                                                        @onclick="() => UpdateForecast(popularCities[city])">@popularCities[city]</span>
             @if (Celsius)
             {
                                                                        <span class="city_text" href="#" style="font-size:15px;">@MyListCelsius[city]°c</span>

@@ -7,6 +7,16 @@
     [Parameter]
     public List<dynamic>? dynamicData { get; set; }
 
+
+    [Parameter]
+    public EventCallback<string> OnUpdateForecast { get; set; }
+
+    // Method to update the parent value and trigger the event callback
+    private async Task UpdateForecast(string s)
+    {
+        await OnUpdateForecast.InvokeAsync(s);
+    }
+
     [Parameter]
     public bool Celsius { get; set; }
 
@@ -18,24 +28,51 @@
     {
         await OnUpdateParentData.InvokeAsync(s);
     }
+    
 
-
-    private void print()
-    {
-        Console.WriteLine(DateTime.Today);
-        Console.WriteLine(dynamicData[0].forecast.forecastday[0].hour[0].time);
-
-    }
 
     private int sliderValue = 0;
+    private bool ForecastDays = false;
 
     private void UpdateSlider(ChangeEventArgs e)
     {
         sliderValue = Convert.ToInt32(e.Value);
         timeAdjustmentMinutes = sliderValue * 1;
-        adjustedTime = current.AddMinutes(timeAdjustmentMinutes);
+        if (!ForecastDays)
+        {
+            adjustedTime = current.AddMinutes(timeAdjustmentMinutes);
+
+        }
+        else
+        {
+
+            if (sliderValue <= 1380)
+            {
+                adjustedTime = adjustedTime.Date;
+                adjustedTime = adjustedTime.AddMinutes(timeAdjustmentMinutes);
+            }
+        }
+        
+    }
+    private void ResetSlider(int day)
+    {
+        if(day==0)
+        {
+            ForecastDays = false;
+        }
+        else
+        {
+            ForecastDays = true;
+        }
+        DateTime currentDate = DateTime.Now;
+        DateTime tomorrowDate = currentDate.AddDays(day);
+        adjustedTime = new DateTime(tomorrowDate.Year, tomorrowDate.Month, tomorrowDate.Day, currentDate.Hour, currentDate.Minute, 0);
+
+
     }
     private DateTime current = DateTime.Now;
+    private DateTime currentTime = DateTime.Now;
+    private DateTime forecastTime = DateTime.Now;
     private int timeAdjustmentMinutes;
 
     private DateTime adjustedTime;
@@ -47,13 +84,22 @@
 
     }
 
+
+    private void print()
+    {
+        Console.WriteLine(DateTime.Today);
+        Console.WriteLine(dynamicData[0].location.name);
+
+    }
+
+
+
 }
-<h2>ww</h2>
-<button @onclick="print">Click</button>
+
 
     <div class="container1">
         <div class="container1_margin">
-            <p>@myData.location.name, @myData.location.country</p>
+            <p>@dynamicData[@adjustedTime.Day - @current.Day].location.name, @dynamicData[@adjustedTime.Day - @current.Day].location.country</p>
 
             <div class="row">
                  <div class="col-md-1" style="margin-right:2%;">
@@ -82,109 +128,60 @@
               <p>@dynamicData[@adjustedTime.Day - @current.Day].forecast.forecastday[0].hour[@adjustedTime.Hour].condition.text | @adjustedTime.ToString("ddd, dd, HH:mm")</p>
         
 
-        @{
-            DateTime currentTime = DateTime.Now;
+        @if (ForecastDays)
+        {
+            DateTime currentDate = DateTime.Now;
+            DateTime tomorrowDate = currentDate.AddDays(1).Date; // Resetting time part to midnight
 
-            for (int i = 1; i < 9; i++)
+            @for (int i = 1; i < 9; i++)
             {
 
-                                <p style="display: inline; margin-right: 40px;">@currentTime.ToString("H:mm")</p>
-                currentTime = new DateTime(currentTime.Year, currentTime.Month, currentTime.Day, currentTime.Hour, 0, 0);
-                currentTime = currentTime.AddHours(3);
+                                                        <p style="display: inline; margin-right: 40px;">@tomorrowDate.ToString("H:mm")</p>
+                tomorrowDate = new DateTime(@tomorrowDate.Year, tomorrowDate.Month, tomorrowDate.Day, tomorrowDate.Hour, 0, 0);
+
+                tomorrowDate = @tomorrowDate.AddHours(3);
 
             }
         }
+        else{
+            @for (int i = 1; i < 9; i++)
+            {
+
+                                        <p style="display: inline; margin-right: 40px;">@currentTime.ToString("H:mm")</p>
+                currentTime = new DateTime(@currentTime.Year, currentTime.Month, currentTime.Day, currentTime.Hour, 0, 0);
+
+                currentTime = @currentTime.AddHours(3);
+
+            }
+        }
+           
+  
 
 
 <div>
 
     <input class="range" type="range" id="slider" name="slider" min="0" max="1440" step="1" @bind="sliderValue"   @oninput="UpdateSlider" />
 </div>
+
+
+ <div class="temp_cards">
+            @for (int i = 0; i < 7; i++)
+            {
+                int currentIndex = i; 
+                         <div class="temp_day" @onclick="() => ResetSlider(currentIndex)">
+                    <div class="card-body">
+                        <h5 class="card-title">Card @(i + 1)</h5>
+                        <p class="card-text">7</p>
+                        <p class="card-text">11</p>
+                    </div>
+                </div>
+            }
+            
+         
+
+
+
+            </div>
 </div>
 
-
-            </div>
-
-
-
-
-
-
-
-<div class="temp_cards">
- <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Card 1</h5>
-            <p class="card-text">7</p>
-            <p class="card-text">11</p>
-        </div>
-    </div>
-
- <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Card 1</h5>
-            <p class="card-text">73</p>
-            <p class="card-text">11</p>
-        </div>
-    </div>
-
-
-
- <div class="centered_container">
-     <h3>Today's Forecasts for</h3>
-    <div class="container mt-5">
-        <h2 class="text-center mb-4">Time of Day Samples</h2>
-
-        <div class="row">
-            <div class="col-md-3">
-                <h3 class="text-center">Morning</h3>
-                <p>Sample text for the morning.</p>
-                <p>Another sample text for the morning.</p>
-            </div>
-            <div class="col-md-3">
-                <h3 class="text-center">Afternoon</h3>
-                <p>Sample text for the afternoon.</p>
-                <p>Another sample text for the afternoon.</p>
-            </div>
-            <div class="col-md-3">
-                <h3 class="text-center">Evening</h3>
-                <p>Sample text for the evening.</p>
-                <p>Another sample text for the evening.</p>
-            </div>
-            <div class="col-md-3">
-                <h3 class="text-center">Night</h3>
-                <p>Sample text for the night.</p>
-                <p>Another sample text for the night.</p>
-            </div>
-        </div>
-    </div>
-
 </div>
-
-<div class="centered_container">
-     <h3>Weather Insights</h3>
-     <h3>Feels like </h3>
-    <div class="container mt-5">
-        <h2 class="text-center mb-4">Time of Day Samples</h2>
-
-        <div class="row">
-            <div class="col-md-6">
-                <h3 class="text-center">Morning</h3>
-                <p>Sample text for the morning.</p>
-                <p>Another sample text for the morning.</p>
-                <p>Another sample text for the afternoon.</p>
-            </div>
-            <div class="col-md-6">
-                <h3 class="text-center">Afternoon</h3>
-                <p>Sample text for the afternoon.</p>
-                <p>Another sample text for the afternoon.</p
-                    <p>Another sample text for the afternoon.</p>
-            </div>
-
-        </div>
-    </div>
-
-</div>
-
-
-</div

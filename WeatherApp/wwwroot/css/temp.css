@@ -22,10 +22,16 @@
     margin-right: 5%;
 }
 
-.container {
-    width: 10;
-}
+
 
 .temp_cards {
+    margin-top:3%;
     display: flex;
+}
+.card{
+    width:10%;
+}
+.temp_day {
+    border: 2px solid red;
+    margin-right:1%;
 }

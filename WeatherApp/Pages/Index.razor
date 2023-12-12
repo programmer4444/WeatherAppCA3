@@ -71,7 +71,7 @@
             //Console.WriteLine(dynamicData[0].forecast.forecastday[0].hour[1].time);
             for (int i = 0; i < 7; i++)
             {
-               // Console.WriteLine(dynamicData[i].forecast.forecastday[0].hour);
+                // Console.WriteLine(dynamicData[i].forecast.forecastday[0].hour);
                 //Console.WriteLine(dynamicData[i].forecast.forecastday[0].date);
             }
 
@@ -142,6 +142,27 @@
         }
 
     }
+    private async Task UpdateForecast(string cityName)
+    {
+        try
+        {
+            for (int i = 0; i < 7; i++)
+            {
+                DateTime currentDate = DateTime.Today.AddDays(i);
+                var data = await WeatherService.GetWeatherForecastAsync(cityName, 4, currentDate);
+                dynamicData[i] = JsonConvert.DeserializeObject(data);
+                
+            }
+            //Console.WriteLine(dynamicData[0].forecast.forecastday[0].hour[0].time);
+            //Console.WriteLine(dynamicData[0].forecast.forecastday[0].hour[1].time);
+        }
+        catch (Exception ex)
+        {
+            // Handle exceptions
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+
+    }
 }
 @if (json_data != null)
 {
@@ -151,11 +172,12 @@
                  MyListIcons="@myListIcons" 
                  Celsius="@celsius"
                  ToggleTemp="ToggleTemperatureUnit"
+                     DynamicData="@dynamicData" OnUpdateForecast="@UpdateForecast"
 
                          />
                      <Temperature myData="@json_data" OnUpdateParentData="@UpdateParentData"
                              Celsius="@celsius"
-                             DynamicData="@dynamicData"
+                                 DynamicData="@dynamicData" OnUpdateForecast="@UpdateForecast"
                              />
 }
 
