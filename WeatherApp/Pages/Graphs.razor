@@ -9,47 +9,77 @@
 @using ChartJs.Blazor.Common.Handlers
 @using ChartJs.Blazor.Common.Time
 @using ChartJs.Blazor.Interop
+@using ChartJs.Blazor.LineChart
 
 <div style="width:500px;">
-<Chart Config="_config" ></Chart>
+<Chart Config="_config2" ></Chart>
 </div>
 @code {
+    private LineConfig _config2;
 
-
-    private PieConfig _config;
-   
     protected override void OnInitialized()
     {
-        _config = new PieConfig
+        _config2 = new LineConfig
             {
-                Options = new PieOptions
+                Options = new LineOptions
                 {
                     Responsive = true,
                     Title = new OptionsTitle
                     {
                         Display = true,
-                        Text = "ChartJs.Blazor Pie Chart"
+                        Text = "ChartJs.Blazor Line Chart"
+                    },
+                    Tooltips = new Tooltips
+                    {
+                        Mode = InteractionMode.Nearest,
+                        Intersect = true
+                    },
+                    Hover = new Hover
+                    {
+                        Mode = InteractionMode.Nearest,
+                        Intersect = true
+                    },
+                    Scales = new Scales
+                    {
+                        XAxes = new List<CartesianAxis>
+                    {
+                        new CategoryAxis
+                        {
+                            ScaleLabel = new ScaleLabel
+                            {
+                                LabelString = "Month"
+                            }
+                        }
+                    },
+                        YAxes = new List<CartesianAxis>
+                    {
+                        new LinearCartesianAxis
+                        {
+                            ScaleLabel = new ScaleLabel
+                            {
+                                LabelString = "Value"
+                            }
+                        }
+                    }
                     }
                 }
-
             };
-
-        foreach (string color in new[] { "Yellow", "Blue", "Green", "Red" })
+        foreach (string color in new[] { "Yellow", "Blue", "Green", "Red", "White" })
         {
-            _config.Data.Labels.Add(color);
+            _config2.Data.Labels.Add(color);
         }
+        _config2.Data.Labels.Add("Black");
 
-        PieDataset<int> dataset = new PieDataset<int>(new[] { 6, 5, 3, 7 })
+        LineDataset<double> dataset = new LineDataset<double>(new[] { 6.0, 5.3, 7.2, 7.8, 4.5, 9.5 })
             {
-                BackgroundColor = new[]
-                {
-            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
-            ColorUtil.ColorHexString(255, 205, 86), // Slice 2 aka "Yellow"
-            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
-            ColorUtil.ColorHexString(54, 162, 235), // Slice 4 aka "Blue"
-        }
+                BorderColor = ColorUtil.ColorHexString(54, 162, 235), // Set line color (e.g., "Blue")
+                Fill = false, // To prevent filling the area under the line
+               
             };
 
-        _config.Data.Datasets.Add(dataset);
+        _config2.Data.Datasets.Add(dataset);
     }
+}
+
+    
 }

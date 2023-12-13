@@ -9,12 +9,13 @@
 @using ChartJs.Blazor.Common.Handlers
 @using ChartJs.Blazor.Common.Time
 @using ChartJs.Blazor.Interop
-
+@using ChartJs.Blazor.LineChart
 
 
 @code {
 
     private PieConfig _config;
+    private LineConfig _config2;
 
     [Parameter]
     public dynamic? myData { get; set; }
@@ -109,6 +110,51 @@
                     }
                 }
 
+            };
+        _config2 = new LineConfig
+            {
+                Options = new LineOptions
+                {
+                    Responsive = true,
+                    Title = new OptionsTitle
+                    {
+                        Display = true,
+                        Text = "ChartJs.Blazor Line Chart"
+                    },
+                    Tooltips = new Tooltips
+                    {
+                        Mode = InteractionMode.Nearest,
+                        Intersect = true
+                    },
+                    Hover = new Hover
+                    {
+                        Mode = InteractionMode.Nearest,
+                        Intersect = true
+                    },
+                    Scales = new Scales
+                    {
+                        XAxes = new List<CartesianAxis>
+                    {
+                        new CategoryAxis
+                        {
+                            ScaleLabel = new ScaleLabel
+                            {
+                                LabelString = "Month"
+                            }
+                        }
+                    },
+                        YAxes = new List<CartesianAxis>
+                    {
+                        new LinearCartesianAxis
+                        {
+                            ScaleLabel = new ScaleLabel
+                            {
+                                LabelString = "Value"
+                            }
+                        }
+                    }
+                    }
+                }
             };
 
      
@@ -281,6 +327,77 @@
 </div>
 </div>
 
+<div>
+    @{
+    // Create an array of times from 00:00 to 23:00
+
+        string[] times = Enumerable.Range(0, 12).Select(i => $"{i * 2:D2}:00").ToArray();
+
+
+
+@foreach (string time in times)
+{
+            string modifiedTime = time;
+            _config2.Data.Labels.Add(modifiedTime);
+}
+        List<double> temperatureData = new List<double>();
+
+        for (int i = 0; i < 24; i++)
+        {
+            double tempC = dynamicData[0].forecast.forecastday[0].hour[i].temp_c;
+            temperatureData.Add(tempC);
+        }
+
+        LineDataset<double> dataset2 = new LineDataset<double>(temperatureData.ToArray())
+            {
+                BorderColor = ColorUtil.ColorHexString(54, 162, 235), // Set line color (e.g., "Blue")
+                Fill = true, // To prevent filling the area under the line
+                Label = $"Today's Forecast for {dynamicData[0].location.name}",
+                BackgroundColor = ColorUtil.ColorHexString(173, 216, 230),
+                PointRadius = 3, // Set the radius of the dots
+                PointHoverRadius = 4, // Set the radius of the dots on hover
+                ShowLine = true, // Set to true to show the line connecting the 
+
+
+
+            };
+
+        _config2.Data.Datasets.Add(dataset2);
+    }
+    <div style="width:1000px;">
+<Chart Config="_config2" ></Chart>
+</div>
+   <div style="width:1000px;">
+       <div class="row">
+           <div class="col-md-1">
+                    <h2>Line</h2>
+           </div>
+                 <div class="col-md-1">
+                          <h2>Line</h2>
+           </div>
+            <div class="col-md-1">
+                    <h2>Line</h2>
+           </div>
+                 <div class="col-md-1">
+                          <h2>Line</h2>
+           </div>
+            <div class="col-md-1">
+                    <h2>Line</h2>
+           </div>
+                 <div class="col-md-1">
+                          <h2>Line</h2>
+           </div>
+            <div class="col-md-1">
+                    <h2>Line</h2>
+           </div>
+                 <div class="col-md-1">
+                          <h2>Line</h2>
+           </div>
+       </div>
+  
+</div>
+</div>
+
     <div class="container1">
         <div class="container1_margin">
             <p>Weather Forecast</p>
@@ -307,7 +424,7 @@
                    <img src="@dynamicData[0].forecast.forecastday[0].hour[20].condition.icon"/>
                </div>
                <div class="col-md-6">
-                   <p>Day</p>
+                   <p>Night</p>
                    <p>@dynamicData[0].forecast.forecastday[0].hour[20].condition.text</p>
                 @if (Celsius)
                 {
