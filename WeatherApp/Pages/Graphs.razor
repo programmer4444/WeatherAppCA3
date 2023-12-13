@@ -1,148 +1,55 @@
-﻿@page "/graph"
-<button @onclick="UpdateParent">Update Parent Value</button>
+﻿@page "/charts/"
+@using ChartJs.Blazor.PieChart
+@using System.Drawing
+@using ChartJs.Blazor.Util
+@using ChartJs.Blazor.Common
+@using ChartJs.Blazor.Common.Axes
+@using ChartJs.Blazor.Common.Axes.Ticks
+@using ChartJs.Blazor.Common.Enums
+@using ChartJs.Blazor.Common.Handlers
+@using ChartJs.Blazor.Common.Time
+@using ChartJs.Blazor.Interop
 
+<div style="width:500px;">
+<Chart Config="_config" ></Chart>
+</div>
 @code {
-    [Parameter]
-    public string ParentValue { get; set; }
 
-    [Parameter]
-    public EventCallback<string> OnUpdateParentValue { get; set; }
 
-    // Method to update the parent value and trigger the event callback
-    private void UpdateParent()
+    private PieConfig _config;
+   
+    protected override void OnInitialized()
     {
-        string newValue = "New Value from Child";
-        OnUpdateParentValue.InvokeAsync(newValue);
+        _config = new PieConfig
+            {
+                Options = new PieOptions
+                {
+                    Responsive = true,
+                    Title = new OptionsTitle
+                    {
+                        Display = true,
+                        Text = "ChartJs.Blazor Pie Chart"
+                    }
+                }
+
+            };
+
+        foreach (string color in new[] { "Yellow", "Blue", "Green", "Red" })
+        {
+            _config.Data.Labels.Add(color);
+        }
+
+        PieDataset<int> dataset = new PieDataset<int>(new[] { 6, 5, 3, 7 })
+            {
+                BackgroundColor = new[]
+                {
+            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
+            ColorUtil.ColorHexString(255, 205, 86), // Slice 2 aka "Yellow"
+            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
+            ColorUtil.ColorHexString(54, 162, 235), // Slice 4 aka "Blue"
+        }
+            };
+
+        _config.Data.Datasets.Add(dataset);
     }
 }
-<h2>here</h2>
-   <div class="centered_container">
-       <h2>Weekly Forecast</h2>
-<div class="temp_cards">
- <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Card 1</h5>
-            <p class="card-text">7</p>
-            <p class="card-text">11</p>
-        </div>
-    </div>
-
- <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Card 1</h5>
-            <p class="card-text">73</p>
-            <p class="card-text">11</p>
-        </div>
-    </div>
-
- <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Card 1</h5>
-            <p class="card-text">73</p>
-            <p class="card-text">11</p>
-        </div>
-    </div>
- <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Card 1</h5>
-            <p class="card-text">73</p>
-            <p class="card-text">11</p>
-        </div>
-    </div>
- <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Card 1</h5>
-            <p class="card-text">73</p>
-            <p class="card-text">11</p>
-        </div>
-    </div>
- <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Card 1</h5>
-            <p class="card-text">73</p>
-            <p class="card-text">11</p>
-        </div>
-    </div>
-
-    </div>
-        </div>
- <div class="centered_container">
-       <h2>Weekly Forecast</h2>
-<div class="temp_cards">
- <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Card 1</h5>
-            <p class="card-text">7</p>
-            <p class="card-text">11</p>
-        </div>
-    </div>
-
- <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Card 1</h5>
-            <p class="card-text">73</p>
-            <p class="card-text">11</p>
-        </div>
-    </div>
-
-
-
-    </div>
-        </div
-
-        <div class="centered_container">
-       <h2>Weekly Forecast</h2>
-<div class="temp_cards">
- <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Card 1</h5>
-            <p class="card-text">7</p>
-            <p class="card-text">11</p>
-        </div>
-    </div>
-
- <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Card 1</h5>
-            <p class="card-text">73</p>
-            <p class="card-text">11</p>
-        </div>
-    </div>
- <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Card 1</h5>
-            <p class="card-text">73</p>
-            <p class="card-text">11</p>
-        </div>
-    </div>
-
-    </div>
-        </div>
-         <div class="centered_container">
-       <h2>Weekly Forecast</h2>
-<div class="temp_cards">
- <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Card 1</h5>
-            <p class="card-text">7</p>
-            <p class="card-text">11</p>
-        </div>
-    </div>
-
- <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Card 1</h5>
-            <p class="card-text">73</p>
-            <p class="card-text">11</p>
-        </div>
-    </div>
- <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Card 1</h5>
-            <p class="card-text">73</p>
-            <p class="card-text">11</p>
-        </div>
-    </div>
-
-    </div>
-        </div>

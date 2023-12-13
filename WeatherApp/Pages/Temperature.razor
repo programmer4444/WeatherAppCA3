@@ -1,6 +1,21 @@
 ﻿@inject WeatherApiService WeatherService
+@using ChartJs.Blazor.PieChart
+@using System.Drawing
+@using ChartJs.Blazor.Util
+@using ChartJs.Blazor.Common
+@using ChartJs.Blazor.Common.Axes
+@using ChartJs.Blazor.Common.Axes.Ticks
+@using ChartJs.Blazor.Common.Enums
+@using ChartJs.Blazor.Common.Handlers
+@using ChartJs.Blazor.Common.Time
+@using ChartJs.Blazor.Interop
+
+
 
 @code {
+
+    private PieConfig _config;
+
     [Parameter]
     public dynamic? myData { get; set; }
 
@@ -82,6 +97,23 @@
         // Get the current date
         DateTime currentDate = DateTime.Now;
         adjustedTime = currentDate;
+        _config = new PieConfig
+            {
+                Options = new PieOptions
+                {
+                    Responsive = true,
+                    Title = new OptionsTitle
+                    {
+                        Display = true,
+                        Text = "Weekly Forecast"
+                    }
+                }
+
+            };
+
+     
+
+        
 
     }
     private bool ShowGraph = false; 
@@ -89,21 +121,22 @@
 
 
 }
+
 <div class="container1">
        <div class="container1_margin">
     <p>Current Weather</p>
     @{
 
-         string formattedTime;
+
+        string formattedTime;
         string format = "yyyy-MM-dd HH:mm";
 
         // Extract the time component and format it as HH:mm
         string input = dynamicData[0].location.localtime;
-        DateTime localTime = DateTime.ParseExact(input, "yyyy-MM-dd HH:mm", null);
+            DateTime localTime = DateTime.ParseExact(input, "yyyy-MM-dd H:mm", null);
         formattedTime = localTime.ToString("HH:mm");
             
             double c = Math.Ceiling(double.Parse(dynamicData[0].current.temp_c.ToString()));
-            Console.WriteLine(c+50);
             <p>@formattedTime</p>
     }
                
@@ -158,8 +191,137 @@
     </div>
 
 </div>
+    @{
+        int c1 = dynamicData[0].current.temp_c;
+        int rainyDays = 0;
+        int sunnyDays = 0;
+        double maxTemperatureC = double.MinValue;
+        double minTemperatureC = double.MaxValue;
+        double maxTemperatureF = double.MinValue;
+        double minTemperatureF = double.MaxValue;
+        for (int i = 0; i < 7; i++)
+        {
+            double max_tempC = dynamicData[i].forecast.forecastday[0].day.maxtemp_c;
+            if (max_tempC > maxTemperatureC)
+            {
+                maxTemperatureC = max_tempC;
+            }
+            double min_tempC = dynamicData[i].forecast.forecastday[0].day.mintemp_c;
+
+            // Update minTemperatureC if the current temperature is smaller
+            if (min_tempC < minTemperatureC)
+            {
+                minTemperatureC = min_tempC;
+            }
+            //FAHRENHEIT
+            double max_tempF = dynamicData[i].forecast.forecastday[0].day.maxtemp_f;
+            if (max_tempF > maxTemperatureF)
+            {
+                maxTemperatureF = max_tempF;
+            }
+            double min_tempF = dynamicData[i].forecast.forecastday[0].day.mintemp_f;
+
+            // Update minTemperatureC if the current temperature is smaller
+            if (min_tempF < minTemperatureF)
+            {
+                minTemperatureF = min_tempF;
+            }
+            var will_it_rain = dynamicData[i].forecast.forecastday[0].day.daily_will_it_rain;
+            var will_it_snow = dynamicData[i].forecast.forecastday[0].day.daily_will_it_snow;
+            if(will_it_rain==1 || will_it_snow==1)
+            {
+                rainyDays++;
+            }
+            else
+            {
+                sunnyDays++;
+            }
+            //temp+= dynamicData[i].forecast.forecastday[0].day.daily_will_it_snow;
+        }
+        if (Celsius)
+        {
+            _config.Data.Labels.Clear();
+            _config.Data.Datasets.Clear();
+            foreach (string color in new[] { $"Sunny Days {sunnyDays}", $"Rainy/Snowy Days {rainyDays}", $"Highest {maxTemperatureC}°C", $"Lowest {minTemperatureC}°C" })
+            {
+                
+
+                _config.Data.Labels.Add(color);
+            }
+        }
+        else
+        {
+            _config.Data.Labels.Clear();
+            _config.Data.Datasets.Clear();
+            foreach (string color in new[] { $"Sunny Days {sunnyDays}", $"Rainy/Snowy Days {rainyDays}", $"Highest {maxTemperatureF}°F", $"Lowest {minTemperatureF}°F" })
+            {
+        
+
+                _config.Data.Labels.Add(color);
+            }
+        }
+
+        PieDataset<int> dataset = new PieDataset<int>(new[] { sunnyDays, rainyDays, 3, 7 })
+            {
+                BackgroundColor = new[]
+                            {
+           ColorUtil.ColorHexString(54, 162, 235), // Slice 4 aka "Blue"
+            ColorUtil.ColorHexString(255, 205, 86), // Slice 2 aka "Yellow"
+
+             ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
+            
+            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
+        }
+            };
+
+        _config.Data.Datasets.Add(dataset);
+}
+<div style="width:500px;">
+<Chart Config="_config" ></Chart>
+</div>
 </div>
 
+    <div class="container1">
+        <div class="container1_margin">
+            <p>Weather Forecast</p>
+            <div class="row">
+               <div class="col-md-2">
+                   <img src="@dynamicData[0].forecast.forecastday[0].hour[20].condition.icon"/>
+               </div>
+               <div class="col-md-6">
+                   <p>Day</p>
+                   <p>@dynamicData[0].forecast.forecastday[0].hour[12].condition.text</p>
+                    @if (Celsius)
+                {
+                         <p>The High will be @dynamicData[0].forecast.forecastday[0].day.maxtemp_c°C</p>
+                }
+                else
+                {
+                         <p>The High will be @dynamicData[0].forecast.forecastday[0].day.maxtemp_f°F</p>
+                }
+               
+               </div>
+            </div>
+             <div class="row">
+               <div class="col-md-2">
+                   <img src="@dynamicData[0].forecast.forecastday[0].hour[20].condition.icon"/>
+               </div>
+               <div class="col-md-6">
+                   <p>Day</p>
+                   <p>@dynamicData[0].forecast.forecastday[0].hour[20].condition.text</p>
+                @if (Celsius)
+                {
+                         <p>The Low will be @dynamicData[0].forecast.forecastday[0].day.mintemp_c°C</p>
+                }
+                else
+                {
+                         <p>The Low will be @dynamicData[0].forecast.forecastday[0].day.mintemp_f°F</p>
+                }
+               
+               </div>
+            </div>
+            </div>
+            </div>
 
     <div class="container1">
         <div class="container1_margin">
