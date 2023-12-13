@@ -91,6 +91,7 @@
     private DateTime currentTime = DateTime.Now;
     private DateTime forecastTime = DateTime.Now;
     private int timeAdjustmentMinutes;
+    private string displayChart="display: none;";
 
     private DateTime adjustedTime;
 
@@ -99,7 +100,9 @@
         // Get the current date
         DateTime currentDate = DateTime.Now;
         adjustedTime = currentDate;
+        ShowGraph = false;
         _config = new PieConfig
+
             {
                 Options = new PieOptions
                 {
@@ -108,7 +111,7 @@
                     {
                         Display = true,
                         Text = $"Weekly Forecast for {dynamicData[0].location.name}",
-                            FontColor = "white",
+                            FontColor = "black",
                     },
 
 
@@ -187,9 +190,17 @@
     private bool ShowGraph = false;
     private void ToggleButton()
     {
+        if (!ShowGraph)
+        {
+            displayChart = "display: block;";
+        }
+        else
+        {
+            displayChart = "display: none;";
+        }
 
         ShowGraph = !ShowGraph;
-    
+
     }
 
 
@@ -218,7 +229,7 @@
     }
 </div>
 
-@if (ShowGraph)
+@if (@ShowGraph)
 {
 
 
@@ -291,8 +302,9 @@
 
         </div>
     </div>
+}
 
-    <div class="containerGraphs">
+    <div class="containerGraphs" style="@displayChart">
 
         @{
             // Create an array of times from 00:00 to 23:00
@@ -300,6 +312,7 @@
             string[] times = Enumerable.Range(0, 12).Select(i => $"{i * 2:D2}:00").ToArray();
 
 
+        _config2.Options.Title.Text = $"Today's Forecast for {dynamicData[0].location.name}";
             _config2.Data.Labels.Clear();
             @foreach (string time in times)
             {
@@ -350,26 +363,26 @@
     </div>
 
 
-    <div class="containerGraphs">
+    <div class="containerGraphsPie" style="@displayChart">
 
-        @{
-            int c1 = dynamicData[0].current.temp_c;
-            int rainyDays = 0;
-            int sunnyDays = 0;
-            double maxTemperatureC = double.MinValue;
-            double minTemperatureC = double.MaxValue;
-            double maxTemperatureF = double.MinValue;
-            double minTemperatureF = double.MaxValue;
-            for (int i = 0; i < 7; i++)
+    @{
+        int c1 = dynamicData[0].current.temp_c;
+        int rainyDays = 0;
+        int sunnyDays = 0;
+        double maxTemperatureC = double.MinValue;
+        double minTemperatureC = double.MaxValue;
+        double maxTemperatureF = double.MinValue;
+        double minTemperatureF = double.MaxValue;
+        for (int i = 0; i < 7; i++)
+        {
+            double max_tempC = dynamicData[i].forecast.forecastday[0].day.maxtemp_c;
+            if (max_tempC > maxTemperatureC)
             {
-                double max_tempC = dynamicData[i].forecast.forecastday[0].day.maxtemp_c;
-                if (max_tempC > maxTemperatureC)
-                {
-                    maxTemperatureC = max_tempC;
-                }
-                double min_tempC = dynamicData[i].forecast.forecastday[0].day.mintemp_c;
-
-                // Update minTemperatureC if the current temperature is smaller
+                maxTemperatureC = max_tempC;
+            }
+            double min_tempC = dynamicData[i].forecast.forecastday[0].day.mintemp_c;
+            _config.Options.Title.Text = $"Weekly Forecast for {dynamicData[0].location.name}";
+            // Update minTemperatureC if the current temperature is smaller
                 if (min_tempC < minTemperatureC)
                 {
                     minTemperatureC = min_tempC;
@@ -436,6 +449,9 @@
             <Chart Config="_config" ></Chart>
         </div>
     </div>
+    
+@if (@ShowGraph)
+{
 
     <div class="containerGraphs">
         <div class="containerGraphsText">
@@ -473,13 +489,13 @@
                     {
                         <p style="color:white;font-size:17px;">The Low will be @dynamicData[0].forecast.forecastday[0].day.mintemp_f°F</p>
                     }
-               
+
                </div>
             </div>
             </div>
             </div>
-}
-else{
+            }
+@if(!@ShowGraph){
         <div class="containerGraphs">
             <div class="containerGraphsText">
                 <p style="color:white;font-size:17px;">@dynamicData[@adjustedTime.Day - @current.Day].location.name, @dynamicData[@adjustedTime.Day - @current.Day].location.country</p>
@@ -662,3 +678,4 @@ else{
 </div>
 
                 }
+
