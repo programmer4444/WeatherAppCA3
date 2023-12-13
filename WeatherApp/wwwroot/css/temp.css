@@ -2,17 +2,80 @@
 .container1 {
     margin-left: 20%;
     margin-right: 20%;
-    border: 2px solid red;
+    border: 2px solid blue;
     border-radius: 1em;
     max-width: 40%;
     overflow: hidden;
-}
-.container1_margin {
-    margin-left: 2.5%;
-    margin-top:1%;
-    margin-bottom:5%;
+ 
 }
 
+.container1_margin {
+    margin-left: 2.5%;
+    margin-top: 1%;
+    margin-bottom: 5%;
+}
+
+.containerGraphs {
+    background-image: linear-gradient(#384fa1, #4e6bd6);
+    margin-top: 3%;
+    margin-left: 20%;
+    margin-right: 10%;
+    border: 2px solid none;
+    border-radius: 1em;
+    max-width: 50%;
+    overflow: hidden;
+}
+
+.containerGraphsText {
+    margin-left: 2.5%;
+    margin-top: 1%;
+    margin-bottom: 5%;
+}
+
+.button_container {
+    display: flex;
+    text-align: center;
+    margin-left: 35%;
+}
+
+
+
+/* CSS */
+.button_temp {
+    appearance: button;
+    backface-visibility: hidden;
+    border-radius: 6px;
+    border-width: 0;
+    box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset,rgba(50, 50, 93, .1) 0 2px 5px 0,rgba(0, 0, 0, .07) 0 1px 1px 0;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-family: -apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif;
+    font-size: 100%;
+    height: 44px;
+    line-height: 1.15;
+    margin: 12px 0 0;
+    outline: none;
+    overflow: hidden;
+    padding: 0 25px;
+    position: relative;
+    text-align: center;
+    text-transform: none;
+    transform: translateZ(0);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: 20%;
+    transition: background-color 2s, color 2s;
+    cursor: pointer;
+}
+
+    .button_temp:disabled {
+        cursor: pointer;
+    }
+
+    .button_temp:focus {
+        box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset, rgba(50, 50, 93, .2) 0 6px 15px 0, rgba(0, 0, 0, .1) 0 2px 2px 0, rgba(50, 151, 211, .3) 0 0 0 4px;
+    }
 
 .range {
     width: 100%;
@@ -25,30 +88,33 @@
 
 
 .temp_cards {
-    margin-top:3%;
+    margin-top: 3%;
     display: flex;
 }
-.card{
-    width:10%;
+
+.card {
+    width: 10%;
 }
+
 .temp_day {
-    border: 2px solid red;
-    margin-right:1%;
+    border: 2px solid white;
+    margin-right: 1%;
 }
 
 .forecast_item {
     display: flex;
     justify-content: space-between;
 }
+
 .navigation {
     display: flex;
     justify-content: space-between;
 }
 
 .left {
-    background: red;
+    background: white;
 }
 
 .right {
-    background: blue;
+    background: white;
 }

@@ -93,6 +93,7 @@
     private int timeAdjustmentMinutes;
 
     private DateTime adjustedTime;
+
     protected override void OnInitialized()
     {
         // Get the current date
@@ -106,9 +107,12 @@
                     Title = new OptionsTitle
                     {
                         Display = true,
-                        Text = "Weekly Forecast"
-                    }
-                }
+                        Text = $"Weekly Forecast for {dynamicData[0].location.name}",
+                            FontColor = "white",
+                    },
+
+
+                },
 
             };
         _config2 = new LineConfig
@@ -119,12 +123,17 @@
                     Title = new OptionsTitle
                     {
                         Display = true,
-                        Text = "ChartJs.Blazor Line Chart"
+                        Text = $"Today's Forecast for {dynamicData[0].location.name}",
+                        FontColor="white",
                     },
-                    Tooltips = new Tooltips
+
+
+                    Legend = new Legend
                     {
-                        Mode = InteractionMode.Nearest,
-                        Intersect = true
+                        Labels = new LegendLabels
+                        {
+                            FontColor = ColorUtil.ColorString(255, 255, 255)
+                        }
                     },
                     Hover = new Hover
                     {
@@ -139,8 +148,14 @@
                         {
                             ScaleLabel = new ScaleLabel
                             {
-                                LabelString = "Month"
-                            }
+                                 Display = true,
+                            LabelString = "Time",
+                            FontColor = "white",
+                            },
+                            Ticks = new CategoryTicks
+                        {
+                            FontColor = "white", // Set the font color for the x-axis ticks
+                        },
                         }
                     },
                         YAxes = new List<CartesianAxis>
@@ -149,300 +164,325 @@
                         {
                             ScaleLabel = new ScaleLabel
                             {
-                                LabelString = "Value"
-                            }
+                                 Display = true,
+                            LabelString = "Temperarture",
+                            FontColor = "white",
+                            },
+                             Ticks = new LinearCartesianTicks
+                        {
+                            FontColor = "white", // Set the font color for the x-axis ticks
+                        },
+
                         }
                     }
                     }
                 }
             };
 
-     
 
-        
+
+
 
     }
-    private bool ShowGraph = false; 
+    private bool ShowGraph = false;
+    private void ToggleButton()
+    {
+
+        ShowGraph = !ShowGraph;
+    
+    }
 
 
 
 }
 
-<div class="container1">
-       <div class="container1_margin">
-    <p>Current Weather</p>
-    @{
+<div class="button_container">
+    @if(!ShowGraph){
+               <button class="button_temp" @onclick="() => ToggleButton()" role="button"
+    style="background-color: #405cf5; color: #fff;">Temperature</button>
 
-
-        string formattedTime;
-        string format = "yyyy-MM-dd HH:mm";
-
-        // Extract the time component and format it as HH:mm
-        string input = dynamicData[0].location.localtime;
-            DateTime localTime = DateTime.ParseExact(input, "yyyy-MM-dd H:mm", null);
-        formattedTime = localTime.ToString("HH:mm");
-            
-            double c = Math.Ceiling(double.Parse(dynamicData[0].current.temp_c.ToString()));
-            <p>@formattedTime</p>
     }
-               
-
-    <div class="row">
-        <div class="col-md-2"><img src="@dynamicData[0].current.condition.icon"/></div>
-            @{
-                if(Celsius)
-                        {
-                    <div class="col-md-1"><p>@Math.Ceiling(double.Parse(dynamicData[0].current.temp_c.ToString()))°C</p></div>
-                }
-                else
-                {
-                            <div class="col-md-3"><p>@Math.Ceiling(double.Parse(dynamicData[0].current.temp_f.ToString()))°F</p></div>
-                }
-                
-            }
-          <div class="col-md-6">
-                  <p>@dynamicData[0].current.condition.text</p>
-                  @if(Celsius)
-                        {
-                             <p>Feels like @Math.Ceiling(double.Parse(@dynamicData[0].current.feelslike_c.ToString()))°C</p>
-                }
-                else
-                {
-                          <p>Feels like @Math.Ceiling(double.Parse(@dynamicData[0].current.feelslike_f.ToString()))°F</p>
-                }
-              </div>
-           
-    </div>
-    <div class="row">
-        <div class="col-md-4">
-            Wind
-        </div>
-         <div class="col-md-4">
-            Humidity
-        </div>
-         <div class="col-md-4">
-            Pressure
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
-                <p>@dynamicData[0].current.wind_kph km/h @dynamicData[0].current.wind_dir°</p> 
-        </div>
-         <div class="col-md-4">
-                 <p>@dynamicData[0].current.humidity %</p>
-        </div>
-         <div class="col-md-4">
-               <p>@dynamicData[0].current.pressure_mb MB</p> 
-        </div>
-    </div>
-
+    else
+    {
+             <button class="button_temp" @onclick="() => ToggleButton()" role="button"
+                style="background-color: #fff; color: #405cf5;">Temperature</button>
+    }
+     @if(ShowGraph){
+              <button class="button_temp" @onclick="() => ToggleButton()" role="button"
+                              style="background-color: #405cf5; color: #fff;">Graphs</button>
+     }
+    else
+    {
+                <button class="button_temp" @onclick="() => ToggleButton()" role="button"
+                    style="background-color: #fff; color: #405cf5;">Graphs</button>
+    }
 </div>
-    @{
-        int c1 = dynamicData[0].current.temp_c;
-        int rainyDays = 0;
-        int sunnyDays = 0;
-        double maxTemperatureC = double.MinValue;
-        double minTemperatureC = double.MaxValue;
-        double maxTemperatureF = double.MinValue;
-        double minTemperatureF = double.MaxValue;
-        for (int i = 0; i < 7; i++)
-        {
-            double max_tempC = dynamicData[i].forecast.forecastday[0].day.maxtemp_c;
-            if (max_tempC > maxTemperatureC)
-            {
-                maxTemperatureC = max_tempC;
-            }
-            double min_tempC = dynamicData[i].forecast.forecastday[0].day.mintemp_c;
 
-            // Update minTemperatureC if the current temperature is smaller
-            if (min_tempC < minTemperatureC)
-            {
-                minTemperatureC = min_tempC;
-            }
-            //FAHRENHEIT
-            double max_tempF = dynamicData[i].forecast.forecastday[0].day.maxtemp_f;
-            if (max_tempF > maxTemperatureF)
-            {
-                maxTemperatureF = max_tempF;
-            }
-            double min_tempF = dynamicData[i].forecast.forecastday[0].day.mintemp_f;
+@if (ShowGraph)
+{
 
-            // Update minTemperatureC if the current temperature is smaller
-            if (min_tempF < minTemperatureF)
-            {
-                minTemperatureF = min_tempF;
+
+    <div class="containerGraphs">
+        <div class="containerGraphsText">
+            <p style="color:white;font-size:19px;">Current Weather - @dynamicData[0].location.name</p>
+            @{
+                string formattedTime;
+                string format = "yyyy-MM-dd HH:mm";
+
+                // Extract the time component and format it as HH:mm
+                string input = dynamicData[0].location.localtime;
+                DateTime localTime = DateTime.ParseExact(input, "yyyy-MM-dd H:mm", null);
+                formattedTime = localTime.ToString("HH:mm");
+
+                double c = Math.Ceiling(double.Parse(dynamicData[0].current.temp_c.ToString()));
+                <p style="color:white;font-size:14px;">@formattedTime</p>
             }
-            var will_it_rain = dynamicData[i].forecast.forecastday[0].day.daily_will_it_rain;
-            var will_it_snow = dynamicData[i].forecast.forecastday[0].day.daily_will_it_snow;
-            if(will_it_rain==1 || will_it_snow==1)
+
+
+            <div class="row">
+                <div class="col-md-1"><img src="@dynamicData[0].current.condition.icon"/></div>
+                @{
+                    if (Celsius)
+                    {
+                        <div class="col-md-2"><p style="color:white;font-size:40px;">
+                                @Math.Ceiling(double.Parse(dynamicData[0].current.temp_c.ToString()))°C</p></div>
+                    }
+                    else
+                    {
+                        <div class="col-md-2"><p style="color:white;font-size:40px;">@Math.Ceiling(double.Parse(dynamicData[0].current.temp_f.ToString()))°F</p></div>
+                    }
+
+                }
+                <div class="col-md-6">
+                    <p style="color:white;font-size:20px;">@dynamicData[0].current.condition.text</p>
+                    @if (Celsius)
+                    {
+                        <p style="color:white;font-size:20px;">Feels like @Math.Ceiling(double.Parse(@dynamicData[0].current.feelslike_c.ToString()))°C</p>
+                    }
+                    else
+                    {
+                        <p style="color:white;font-size:20px;">Feels like @Math.Ceiling(double.Parse(@dynamicData[0].current.feelslike_f.ToString()))°F</p>
+                    }
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <p style="color:white;font-size:17px;">Wind</p>
+                </div>
+                <div class="col-md-4">
+                    <p style="color:white;font-size:17px;">Humidity</p> 
+                </div>
+                <div class="col-md-4">
+                    <p style="color:white;font-size:17px;">Pressure</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <p style="color:white;font-size:20px;">@dynamicData[0].current.wind_kph km/h @dynamicData[0].current.wind_dir°</p> 
+                </div>
+                <div class="col-md-4">
+                    <p style="color:white;font-size:20px;">@dynamicData[0].current.humidity %</p>
+                </div>
+                <div class="col-md-4">
+                    <p style="color:white;font-size:20px;">@dynamicData[0].current.pressure_mb MB</p> 
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="containerGraphs">
+
+        @{
+            // Create an array of times from 00:00 to 23:00
+
+            string[] times = Enumerable.Range(0, 12).Select(i => $"{i * 2:D2}:00").ToArray();
+
+
+            _config2.Data.Labels.Clear();
+            @foreach (string time in times)
             {
-                rainyDays++;
+                string modifiedTime = time;
+                _config2.Data.Labels.Add(modifiedTime);
+            }
+
+            List<double> temperatureData = new List<double>();
+
+            for (int i = 0; i < 24; i++)
+            {
+                double temp;
+                if (Celsius)
+                {
+                    temp = dynamicData[0].forecast.forecastday[0].hour[i].temp_c;
+                }
+                else
+                {
+                    temp = dynamicData[0].forecast.forecastday[0].hour[i].temp_f;
+                }
+
+                temperatureData.Add(temp);
+            }
+            _config2.Data.Datasets.Clear();
+
+            LineDataset<double> dataset2 = new LineDataset<double>(temperatureData.ToArray())
+                {
+                    BorderColor = ColorUtil.ColorHexString(54, 162, 235),
+                    Fill = true,
+                    Label = "Temperature",
+                    BackgroundColor = ColorUtil.ColorHexString(173, 216, 230),
+                    PointRadius = 3, // Set the radius of the dots
+                    PointHoverRadius = 4, // Set the radius of the dots on hover
+                    ShowLine = true, // Set to true to show the line connecting the 
+
+
+
+                };
+
+            _config2.Data.Datasets.Add(dataset2);
+        }
+        <div >
+            <Chart Config="_config2" ></Chart>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="containerGraphs">
+
+        @{
+            int c1 = dynamicData[0].current.temp_c;
+            int rainyDays = 0;
+            int sunnyDays = 0;
+            double maxTemperatureC = double.MinValue;
+            double minTemperatureC = double.MaxValue;
+            double maxTemperatureF = double.MinValue;
+            double minTemperatureF = double.MaxValue;
+            for (int i = 0; i < 7; i++)
+            {
+                double max_tempC = dynamicData[i].forecast.forecastday[0].day.maxtemp_c;
+                if (max_tempC > maxTemperatureC)
+                {
+                    maxTemperatureC = max_tempC;
+                }
+                double min_tempC = dynamicData[i].forecast.forecastday[0].day.mintemp_c;
+
+                // Update minTemperatureC if the current temperature is smaller
+                if (min_tempC < minTemperatureC)
+                {
+                    minTemperatureC = min_tempC;
+                }
+                //FAHRENHEIT
+                double max_tempF = dynamicData[i].forecast.forecastday[0].day.maxtemp_f;
+                if (max_tempF > maxTemperatureF)
+                {
+                    maxTemperatureF = max_tempF;
+                }
+                double min_tempF = dynamicData[i].forecast.forecastday[0].day.mintemp_f;
+
+                // Update minTemperatureC if the current temperature is smaller
+                if (min_tempF < minTemperatureF)
+                {
+                    minTemperatureF = min_tempF;
+                }
+                var will_it_rain = dynamicData[i].forecast.forecastday[0].day.daily_will_it_rain;
+                var will_it_snow = dynamicData[i].forecast.forecastday[0].day.daily_will_it_snow;
+                if (will_it_rain == 1 || will_it_snow == 1)
+                {
+                    rainyDays++;
+                }
+                else
+                {
+                    sunnyDays++;
+                }
+                //temp+= dynamicData[i].forecast.forecastday[0].day.daily_will_it_snow;
+            }
+            if (Celsius)
+            {
+                _config.Data.Labels.Clear();
+                _config.Data.Datasets.Clear();
+                foreach (string color in new[] { $"Sunny Days {sunnyDays}", $"Rainy/Snowy Days {rainyDays}", $"Highest {maxTemperatureC}°C", $"Lowest {minTemperatureC}°C" })
+                {
+
+
+                    _config.Data.Labels.Add(color);
+                }
             }
             else
             {
-                sunnyDays++;
+                _config.Data.Labels.Clear();
+                _config.Data.Datasets.Clear();
+                foreach (string color in new[] { $"Sunny Days {sunnyDays}", $"Rainy/Snowy Days {rainyDays}", $"Highest {maxTemperatureF}°F", $"Lowest {minTemperatureF}°F" })
+                {
+
+
+                    _config.Data.Labels.Add(color);
+                }
             }
-            //temp+= dynamicData[i].forecast.forecastday[0].day.daily_will_it_snow;
+
+            PieDataset<int> dataset = new PieDataset<int>(new[] { sunnyDays, rainyDays, 3, 7 })
+                {
+                    BackgroundColor = new[] { "#FF6384", "#36A2EB", "#FFCE56" },
+                    HoverBackgroundColor = new[] { "#FF6384", "#36A2EB", "#FFCE56" },
+
+
+                };
+
+            _config.Data.Datasets.Add(dataset);
         }
-        if (Celsius)
-        {
-            _config.Data.Labels.Clear();
-            _config.Data.Datasets.Clear();
-            foreach (string color in new[] { $"Sunny Days {sunnyDays}", $"Rainy/Snowy Days {rainyDays}", $"Highest {maxTemperatureC}°C", $"Lowest {minTemperatureC}°C" })
-            {
-                
+        <div >
+            <Chart Config="_config" ></Chart>
+        </div>
+    </div>
 
-                _config.Data.Labels.Add(color);
-            }
-        }
-        else
-        {
-            _config.Data.Labels.Clear();
-            _config.Data.Datasets.Clear();
-            foreach (string color in new[] { $"Sunny Days {sunnyDays}", $"Rainy/Snowy Days {rainyDays}", $"Highest {maxTemperatureF}°F", $"Lowest {minTemperatureF}°F" })
-            {
-        
-
-                _config.Data.Labels.Add(color);
-            }
-        }
-
-        PieDataset<int> dataset = new PieDataset<int>(new[] { sunnyDays, rainyDays, 3, 7 })
-            {
-                BackgroundColor = new[]
-                            {
-           ColorUtil.ColorHexString(54, 162, 235), // Slice 4 aka "Blue"
-            ColorUtil.ColorHexString(255, 205, 86), // Slice 2 aka "Yellow"
-
-             ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
-            
-            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
-        }
-            };
-
-        _config.Data.Datasets.Add(dataset);
-}
-<div style="width:500px;">
-<Chart Config="_config" ></Chart>
-</div>
-</div>
-
-<div>
-    @{
-    // Create an array of times from 00:00 to 23:00
-
-        string[] times = Enumerable.Range(0, 12).Select(i => $"{i * 2:D2}:00").ToArray();
-
-
-
-@foreach (string time in times)
-{
-            string modifiedTime = time;
-            _config2.Data.Labels.Add(modifiedTime);
-}
-        List<double> temperatureData = new List<double>();
-
-        for (int i = 0; i < 24; i++)
-        {
-            double tempC = dynamicData[0].forecast.forecastday[0].hour[i].temp_c;
-            temperatureData.Add(tempC);
-        }
-
-        LineDataset<double> dataset2 = new LineDataset<double>(temperatureData.ToArray())
-            {
-                BorderColor = ColorUtil.ColorHexString(54, 162, 235), // Set line color (e.g., "Blue")
-                Fill = true, // To prevent filling the area under the line
-                Label = $"Today's Forecast for {dynamicData[0].location.name}",
-                BackgroundColor = ColorUtil.ColorHexString(173, 216, 230),
-                PointRadius = 3, // Set the radius of the dots
-                PointHoverRadius = 4, // Set the radius of the dots on hover
-                ShowLine = true, // Set to true to show the line connecting the 
-
-
-
-            };
-
-        _config2.Data.Datasets.Add(dataset2);
-    }
-    <div style="width:1000px;">
-<Chart Config="_config2" ></Chart>
-</div>
-   <div style="width:1000px;">
-       <div class="row">
-           <div class="col-md-1">
-                    <h2>Line</h2>
-           </div>
-                 <div class="col-md-1">
-                          <h2>Line</h2>
-           </div>
-            <div class="col-md-1">
-                    <h2>Line</h2>
-           </div>
-                 <div class="col-md-1">
-                          <h2>Line</h2>
-           </div>
-            <div class="col-md-1">
-                    <h2>Line</h2>
-           </div>
-                 <div class="col-md-1">
-                          <h2>Line</h2>
-           </div>
-            <div class="col-md-1">
-                    <h2>Line</h2>
-           </div>
-                 <div class="col-md-1">
-                          <h2>Line</h2>
-           </div>
-       </div>
-  
-</div>
-</div>
-
-    <div class="container1">
-        <div class="container1_margin">
-            <p>Weather Forecast</p>
+    <div class="containerGraphs">
+        <div class="containerGraphsText">
+            <p style="color:white;font-size:17px;">Weather Forecast</p>
             <div class="row">
-               <div class="col-md-2">
-                   <img src="@dynamicData[0].forecast.forecastday[0].hour[20].condition.icon"/>
-               </div>
-               <div class="col-md-6">
-                   <p>Day</p>
-                   <p>@dynamicData[0].forecast.forecastday[0].hour[12].condition.text</p>
+                <div class="col-md-2">
+                    <img src="@dynamicData[0].forecast.forecastday[0].hour[20].condition.icon"/>
+                </div>
+                <div class="col-md-6">
+                    <p style="color:white;font-size:17px;">Day</p>
+                    <p style="color:white;font-size:17px;">@dynamicData[0].forecast.forecastday[0].hour[12].condition.text</p>
                     @if (Celsius)
-                {
-                         <p>The High will be @dynamicData[0].forecast.forecastday[0].day.maxtemp_c°C</p>
-                }
-                else
-                {
-                         <p>The High will be @dynamicData[0].forecast.forecastday[0].day.maxtemp_f°F</p>
-                }
-               
-               </div>
-            </div>
-             <div class="row">
-               <div class="col-md-2">
-                   <img src="@dynamicData[0].forecast.forecastday[0].hour[20].condition.icon"/>
-               </div>
-               <div class="col-md-6">
-                   <p>Night</p>
-                   <p>@dynamicData[0].forecast.forecastday[0].hour[20].condition.text</p>
-                @if (Celsius)
-                {
-                         <p>The Low will be @dynamicData[0].forecast.forecastday[0].day.mintemp_c°C</p>
-                }
-                else
-                {
-                         <p>The Low will be @dynamicData[0].forecast.forecastday[0].day.mintemp_f°F</p>
-                }
-               
-               </div>
-            </div>
-            </div>
-            </div>
+                    {
+                        <p style="color:white;font-size:17px;">The High will be @dynamicData[0].forecast.forecastday[0].day.maxtemp_c°C</p>
+                    }
+                    else
+                    {
+                        <p style="color:white;font-size:17px;">The High will be @dynamicData[0].forecast.forecastday[0].day.maxtemp_f°F</p>
+                    }
 
-    <div class="container1">
-        <div class="container1_margin">
-            <p>@dynamicData[@adjustedTime.Day - @current.Day].location.name, @dynamicData[@adjustedTime.Day - @current.Day].location.country</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <img src="@dynamicData[0].forecast.forecastday[0].hour[22].condition.icon"/>
+                </div>
+                <div class="col-md-6">
+                    <p style="color:white;font-size:17px;">Night</p>
+                    <p style="color:white;font-size:17px;">@dynamicData[0].forecast.forecastday[0].hour[22].condition.text</p>
+                    @if (Celsius)
+                    {
+                        <p style="color:white;font-size:17px;">The Low will be @dynamicData[0].forecast.forecastday[0].day.mintemp_c°C</p>
+                    }
+                    else
+                    {
+                        <p style="color:white;font-size:17px;">The Low will be @dynamicData[0].forecast.forecastday[0].day.mintemp_f°F</p>
+                    }
+               
+               </div>
+            </div>
+            </div>
+            </div>
+}
+else{
+        <div class="containerGraphs">
+            <div class="containerGraphsText">
+                <p style="color:white;font-size:17px;">@dynamicData[@adjustedTime.Day - @current.Day].location.name, @dynamicData[@adjustedTime.Day - @current.Day].location.country</p>
 
             <div class="row">
                  <div class="col-md-1" style="margin-right:2%;">
@@ -452,23 +492,23 @@
                       <div class="col-md-4">
                            @if (Celsius)
                 {
-                            <h1>@dynamicData[@adjustedTime.Day - @current.Day].forecast.forecastday[0].hour[@adjustedTime.Hour].temp_c°c</h1>
+                                    <p style="color:white;font-size:25px;">@dynamicData[@adjustedTime.Day - @current.Day].forecast.forecastday[0].hour[@adjustedTime.Hour].temp_c°c</p>
 
                 }
                 else
                 {
-                                <h1>@dynamicData[@adjustedTime.Day - @current.Day].forecast.forecastday[0].hour[@adjustedTime.Hour].temp_f°f</h1>
+                                        <p style="color:white;font-size:25px;">@dynamicData[@adjustedTime.Day - @current.Day].forecast.forecastday[0].hour[@adjustedTime.Hour].temp_f°f</p>
                 }
                      </div>
                       <div class="col-md-4">
-                           <p style="margin: 0;">Wind: @dynamicData[@adjustedTime.Day - @current.Day].forecast.forecastday[0].hour[@adjustedTime.Hour].wind_kph KMPH</p>
-                                <p style="margin: 0;">Humidity @dynamicData[@adjustedTime.Day - @current.Day].forecast.forecastday[0].hour[@adjustedTime.Hour].humidity %</p>
+                               <p style="color:white;font-size:17px;">Wind: @dynamicData[@adjustedTime.Day - @current.Day].forecast.forecastday[0].hour[@adjustedTime.Hour].wind_kph KMPH</p>
+                                    <p style="color:white;font-size:17px;">Humidity @dynamicData[@adjustedTime.Day - @current.Day].forecast.forecastday[0].hour[@adjustedTime.Hour].humidity %</p>
 
 
                           </div>
             </div>
 
-              <p>@dynamicData[@adjustedTime.Day - @current.Day].forecast.forecastday[0].hour[@adjustedTime.Hour].condition.text | @adjustedTime.ToString("ddd, dd, HH:mm")</p>
+                  <p style="color:white;font-size:17px;">@dynamicData[@adjustedTime.Day - @current.Day].forecast.forecastday[0].hour[@adjustedTime.Hour].condition.text | @adjustedTime.ToString("ddd, dd, HH:mm")</p>
         
 
         @if (ForecastDays)
@@ -479,7 +519,7 @@
             @for (int i = 1; i < 9; i++)
             {
 
-                                                        <p style="display: inline; margin-right: 40px;">@tomorrowDate.ToString("H:mm")</p>
+                                                                    <p style="display: inline; margin-right: 40px; color:white;font-size:17px;">@tomorrowDate.ToString("H:mm")</p>
                 tomorrowDate = new DateTime(@tomorrowDate.Year, tomorrowDate.Month, tomorrowDate.Day, tomorrowDate.Hour, 0, 0);
 
                 tomorrowDate = @tomorrowDate.AddHours(3);
@@ -490,7 +530,7 @@
             @for (int i = 1; i < 9; i++)
             {
 
-                                        <p style="display: inline; margin-right: 40px;">@currentTime.ToString("H:mm")</p>
+                                                    <p style="display: inline; margin-right: 40px; color:white;font-size:17px;">@currentTime.ToString("H:mm")</p>
                 currentTime = new DateTime(@currentTime.Year, currentTime.Month, currentTime.Day, currentTime.Hour, 0, 0);
 
                 currentTime = @currentTime.AddHours(3);
@@ -518,16 +558,16 @@
                 string formattedResult = dateTime.ToString("ddd d");
                 int currentIndex = i; 
                          <div class="temp_day" @onclick="() => ResetSlider(currentIndex)">
-                    <div class="card-body">
-                            <p class="card-title" style="text-align:center;">@formattedResult</p>
+                    <div class="card-body" style="cursor:pointer;">
+                                    <p class="card-title" style="text-align:center; color:white;font-size:17px;">@formattedResult</p>
                            
                                         <img src="@dynamicData[i].forecast.forecastday[0].hour[0].condition.icon" style="width: 60px; height: 70px; text-align:center;"/>
                             @if(Celsius){
-                                        <p class="card-text" style="text-align:center;">@tempC°C</p>
+                                                    <p class="card-text" style="text-align:center; color:white;font-size:17px;">@tempC°C</p>
                         }
                         else
                         {
-                                             <p class="card-text" style="text-align:center;">@tempF°F</p>
+                                                         <p class="card-text" style="text-align:center; color:white;font-size:17px;">@tempF°F</p>
                         }
                         
                                
@@ -545,10 +585,10 @@
 </div>
 
             
- <div class="container1">
-        <div class="container1_margin">
+     <div class="containerGraphs" style="margin-bottom:5%;">
+            <div class="containerGraphsText">
  <div class="centered_container">
-     <h3>Weather Insights</h3>
+         <p style="color:white;font-size:25px;">Weather Insights</p>
      <div class="row">
          <div class=col-md-2>
              <img src="@dynamicData[0].forecast.forecastday[0].hour[current.Hour].condition.icon" /> 
@@ -556,57 +596,57 @@
          <div class=col-md-8>
                     @if (Celsius)
                     {
-            <h5>Feels like @dynamicData[0].current.feelslike_c°c</h5>
+                    <p style="color:white;font-size:17px;">Feels like @dynamicData[0].current.feelslike_c°c</p>
 
                     }
                     else
                     {
-             <h5>Feels like @dynamicData[0].current.feelslike_f°f</h5>
+                     <p style="color:white;font-size:17px;">Feels like @dynamicData[0].current.feelslike_f°f</p>
                     }
          </div>
      </div>
-     <h5>@dynamicData[0].current.condition.text</h5>
+     <p style="color:white;font-size:17px;">@dynamicData[0].current.condition.text</p>
            
     <div class="container mt-5">
         <div class="row">
             <div class="col-md-6">
                 <div class="forecast_item">
-                <div><p>Chance of Rain </p></div>
-                <div>@dynamicData[0].forecast.forecastday[0].day.daily_chance_of_rain%</div>
+                    <div><p style="color:white;font-size:17px;">Chance of Rain </p></div>
+                    <p style="color:white;font-size:17px;">@dynamicData[0].forecast.forecastday[0].day.daily_chance_of_rain%</p>
                 </div>
                 <div class="forecast_item">
-                    <div> <p >Low - High</p></div>
+                        <div> <p style="color:white;font-size:17px;" >Low - High</p></div>
                      @if (Celsius)
                             {
-                                    <div>@dynamicData[0].forecast.forecastday[0].day.mintemp_c - 
-                                    @dynamicData[0].forecast.forecastday[0].day.maxtemp_c°C</div>
+                                            <p style="color:white;font-size:17px;">@dynamicData[0].forecast.forecastday[0].day.mintemp_c - 
+                                    @dynamicData[0].forecast.forecastday[0].day.maxtemp_c°C</p>
                             }
                             else
                             {
-                                     <div>@dynamicData[0].forecast.forecastday[0].day.mintemp_f - 
-                                    @dynamicData[0].forecast.forecastday[0].day.maxtemp_f°F</div>
+                                             <p style="color:white;font-size:17px;">@dynamicData[0].forecast.forecastday[0].day.mintemp_f - 
+                                    @dynamicData[0].forecast.forecastday[0].day.maxtemp_f°F</p>
                             }
 
                 </div>
                 <div class="forecast_item">
-                    <div> <p >Humidity</p></div>
-                    <div>@dynamicData[0].forecast.forecastday[0].day.avghumidity%</div>
+                        <div> <p  style="color:white;font-size:17px;">Humidity</p></div>
+                        <p style="color:white;font-size:17px;">@dynamicData[0].forecast.forecastday[0].day.avghumidity%</p>
                 </div>
 
 
             </div>
             <div class="col-md-6">
                  <div class="forecast_item">
-                <div><p>Sunrise</p></div>
-                <div>@dynamicData[0].forecast.forecastday[0].astro.sunrise</div>
+                    <div><p style="color:white;font-size:17px;">Sunrise</p></div>
+                    <p style="color:white;font-size:17px;">@dynamicData[0].forecast.forecastday[0].astro.sunrise</p>
                 </div>
                 <div class="forecast_item">
-                <div><p>Sunset</p></div>
-                <div>@dynamicData[0].forecast.forecastday[0].astro.sunset</div>
+                    <div><p style="color:white;font-size:17px;">Sunset</p></div>
+                    <p style="color:white;font-size:17px;">@dynamicData[0].forecast.forecastday[0].astro.sunset</p>
                 </div>
                 <div class="forecast_item">
-                <div><p>Wind</p></div>
-                <div>@dynamicData[0].current.wind_kph KPH</div>
+                    <div><p style="color:white;font-size:17px;">Wind</p></div>
+                    <p  style="color:white;font-size:17px;">@dynamicData[0].current.wind_kph KPH</p>
                 </div>
  
             </div>
@@ -621,3 +661,4 @@
 </div>
 </div>
 
+                }
